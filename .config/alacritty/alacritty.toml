@@ -1,0 +1,6 @@
+[window]
+decorations = "None"
+startup_mode = "Maximized"
+
+[keyboard]
+bindings = [{ key = "F11", action = "ToggleFullscreen" }]

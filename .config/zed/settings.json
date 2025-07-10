@@ -1,0 +1,80 @@
+{
+  "telemetry": {
+    "metrics": false,
+    "diagnostics": false
+  },
+  "terminal": {
+    "env": {
+      "EDITOR": "zed --wait",
+      "VISUAL": "zed --wait"
+    },
+    "toolbar": {
+      "breadcrumbs": false
+    }
+  },
+  "lsp": {
+    "jdtls": {
+      "settings": {
+        "java": {
+          "jdt": {
+            "ls": {
+              "lombokSupport": {
+                "enabled": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "bash-language-server": {
+      "binary": {
+        "path": "/usr/bin/bash-language-server",
+        "arguments": ["start"]
+      }
+    },
+    "basedpyright": {
+      "settings": {
+        "basedpyright.analysis": {
+          "typeCheckingMode": "off"
+        }
+      }
+    },
+    "ty": {
+      "binary": {
+        "path": "/home/olive/.local/bin/ty",
+        "arguments": ["server"]
+      },
+      "initialization_options": {
+        "settings": {
+          "python": {
+            "ty": {
+              "disableLanguageServices": true
+            }
+          }
+        }
+      }
+    }
+  },
+  "auto_install_extensions": {
+    "basedpyright": true,
+    "basher": true,
+    "emmet": true,
+    "git-firefly": true,
+    "java": true,
+    "material-icon-theme": true,
+    "ruff": true,
+    "toml": true,
+    "ty": true,
+    "xml": true
+  },
+  "languages": {
+    "Python": {
+      "language_servers": ["ruff", "ty", "basedpyright"],
+      "code_actions_on_format": {
+        "source.organizeImports.ruff": true,
+        "source.fixAll.ruff": true
+      }
+    }
+  },
+  "icon_theme": "Material Icon Theme"
+}
