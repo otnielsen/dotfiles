@@ -17,3 +17,7 @@ export CXX_LD=mold
 export NODE_REPL_HISTORY=$XDG_STATE_HOME/node_repl_history
 export MYSQL_HISTFILE=$XDG_STATE_HOME/mysql_history
 export PYTHON_HISTORY=$XDG_STATE_HOME/python_history
+
+export AMD_DEBUG=useaco
+
+source $HOME/.bashrc
