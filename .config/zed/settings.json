@@ -14,12 +14,19 @@
   },
   "lsp": {
     "jdtls": {
-      "settings": {
-        "java": {
-          "jdt": {
-            "ls": {
-              "lombokSupport": {
-                "enabled": true
+      "initialization_options": {
+        "settings": {
+          "java": {
+            "jdt": {
+              "ls": {
+                "lombokSupport": {
+                  "enabled": true
+                }
+              }
+            },
+            "configuration": {
+              "maven": {
+                "globalSettings": "/home/olive/.config/maven/settings.xml"
               }
             }
           }
@@ -50,7 +57,8 @@
             "ty": {
               "disableLanguageServices": true
             }
-          }
+          },
+          "diagnosticMode": "workspace"
         }
       }
     }
@@ -74,6 +82,9 @@
         "source.organizeImports.ruff": true,
         "source.fixAll.ruff": true
       }
+    },
+    "Java": {
+      "format_on_save": "off"
     }
   },
   "icon_theme": "Material Icon Theme"

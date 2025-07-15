@@ -1,3 +1,12 @@
 [user]
-email = olni0002@stud.kea.dk
 name = olni0002
+email = olni0002@stud.kea.dk
+
+[diff]
+tool = zed
+
+[difftool "zed"]
+cmd = "zed --wait --diff $LOCAL $REMOTE"
+
+[difftool]
+prompt = false
