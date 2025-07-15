@@ -9,7 +9,7 @@ alias gearlever='flatpak run it.mijorus.gearlever'
 
 alias diff='diff --color=auto'
 alias grep='grep --color=auto'
-alias ls='ls --color=auto'
-alias tree='tree -C'
+alias ls='ls --color=auto --group-directories-first'
+alias tree='tree -C --dirsfirst'
 
 alias lg='lazygit'
