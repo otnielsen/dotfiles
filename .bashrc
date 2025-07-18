@@ -13,4 +13,4 @@ alias ls='ls --color=auto --group-directories-first'
 alias tree='tree --dirsfirst'
 
 alias lg='lazygit'
-alias dl='curl -OL' # dl for download
+alias dl='curl -fOL' # dl for download
