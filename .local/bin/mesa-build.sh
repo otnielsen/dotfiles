@@ -22,14 +22,15 @@ fi
 
 curl -fOL "https://archive.mesa3d.org/${mesa_ver}.tar.xz"
 tar -xf "${mesa_ver}.tar.xz"
+rm "${mesa_ver}.tar.xz"
 cd "$mesa_ver"
 
 compiler_args="-march=native -mtune=native -O3"
-
-meson setup build \
+builddir=build
+meson setup "$builddir" \
     -Dprefix="$HOME/.local" \
     -Dvulkan-drivers=amd \
-    -Dgallium-drivers=[] \
+    -Dgallium-drivers=radeonsi \
     -Dplatforms=wayland,x11 \
     -Db_lto=true \
     -Db_lto_mode=thin \
@@ -41,9 +42,11 @@ meson setup build \
     -Dllvm=disabled \
     -Dwrap_mode=nofallback \
     -Dbuildtype=release \
-    -Db_ndebug=if-release
+    -Db_ndebug=if-release \
+    -Damd-use-llvm=false \
+    -Dgallium-vdpau=enabled \
+    -Dgallium-va=enabled
 
-ninja -C build
-ninja -C build install
-
-rm "../${mesa_ver}.tar.xz"
+ulimit -n 2048 # mold complains about too many open files with the default 1024
+ninja -C "$builddir"
+ninja -C "$builddir" install
