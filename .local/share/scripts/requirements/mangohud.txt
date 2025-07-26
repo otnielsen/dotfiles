@@ -1,0 +1,3 @@
+libxkbcommon-devel
+spdlog-devel
+libstdc++-static
