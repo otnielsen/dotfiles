@@ -1,28 +1,26 @@
-#!/usr/bin/env sh
+#!/bin/dash
 
 # meson is required as well as a compiler and linker for c and c++
 # envvars CC, CXX, CXX_LD and CC_LD should be set
 # install the build dependencies from ~/.local/share/scripts/requirements/gamemode.txt
 
-set -e
+set -eu
 
-if [ -z "$1" ]; then
-    gamemode_ver=$(curl https://api.github.com/repos/FeralInteractive/gamemode/releases/latest | jq -r .tag_name)
-else
-    gamemode_ver="$1"
+version=$(curl -fL --no-progress-meter https://api.github.com/repos/FeralInteractive/gamemode/releases/latest | jq -r '.tag_name')
+
+if [ "$version" = "$(gamemoded --version | awk '{ sub(/^v/, "", $3); print $3 }')" ]; then
+    echo "Gamemode $version is already installed."
+    exit
 fi
 
 cd ~/.local/src
 
-if [ -d "gamemode-${gamemode_ver}" ]; then
-    echo "gamemode-${gamemode_ver} is already downloaded."
-    exit 1
-fi
-
-curl -fOL "https://github.com/FeralInteractive/gamemode/releases/download/${gamemode_ver}/gamemode-${gamemode_ver}.tar.xz"
-tar -xf "gamemode-${gamemode_ver}.tar.xz"
-rm "gamemode-${gamemode_ver}.tar.xz"
-cd "gamemode-${gamemode_ver}"
+archive_name="gamemode-${version}.tar.xz"
+curl -fL --remote-name-all "https://github.com/FeralInteractive/gamemode/releases/download/${version}/{$archive_name,sha256sums.txt}"
+sha256sum -c --ignore-missing --quiet --strict sha256sums.txt
+tar -xf "$archive_name"
+rm "$archive_name"
+cd "gamemode-$version"
 
 compiler_args="-march=native -mtune=native -O3"
 builddir=build
