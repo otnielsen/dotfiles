@@ -1,1 +1,30 @@
+set shellopts "-eu"
+set ifs "\n"
 set hidden true
+
+nmap i
+nmap <f-1>
+nmap <space> toggle
+nmap D delete
+nmap E &zed $fx
+nmap X %unar $f
+nmap U %du -cshD $fx | tail -n 1
+
+cmd open ${{
+    mime=$(file -bL --mime-type $f)
+
+    case $mime in
+        text/*)
+            case $f in
+                *.md) PAGER="less -R" glow -pw $(tput cols) $f ;;
+                *) bat --paging=always -p $f
+            esac
+            ;;
+        video/* | audio/*) mpv $f ;;
+        application/json) jq . $f | bat --paging=always -pljson ;;
+        application/x-xz | application/x-tar | application/gzip | application/vnd.rar | application/zip | application/x-7z-compressed)
+            lsar $f | tail -n +2 | tree -C --dirsfirst --fromfile | less -R
+            ;;
+        *) file -L $(basename $f); $SHELL
+    esac
+}}
