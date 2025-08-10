@@ -1,4 +1,6 @@
-#!/usr/bin/env sh
+#!/bin/dash
+
+set -eu
 
 export MANGOHUD=1
 export RADV_TEX_ANISO=16
