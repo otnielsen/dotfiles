@@ -10,10 +10,11 @@ alias gearlever='flatpak run it.mijorus.gearlever'
 alias diff='diff --color=auto'
 alias grep='grep --color=auto'
 alias ls='ls --color=auto --group-directories-first'
-alias tree='tree --dirsfirst'
+alias tree='tree -alI .git --dirsfirst'
+alias du='du -shD'
 
 alias lg='lazygit'
-alias dl='curl -fOL' # dl for download
+alias dl='curl -fL --remote-name-all' # dl for download
 
 # copied verbatim from lf source code https://github.com/gokcehan/lf/blob/master/etc/lfcd.sh
 lfcd() {
