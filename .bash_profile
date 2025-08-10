@@ -7,6 +7,7 @@ export XDG_CACHE_HOME=$HOME/.cache
 
 export EDITOR=micro
 export VISUAL=$EDITOR
+export PAGER="less -RF"
 export MANPAGER="bat --strip-ansi=always -plman"
 
 export CC=clang
@@ -20,10 +21,10 @@ export PYTHON_HISTORY=$XDG_STATE_HOME/python_history
 
 export AMD_DEBUG=useaco
 
-export VK_DRIVER_FILES=~/.local/share/vulkan/icd.d/radeon_icd.x86_64.json:/usr/share/vulkan/icd.d/radeon_icd.i686.json
-export LD_LIBRARY_PATH="$HOME/.local/lib64:/usr/local/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export VK_DRIVER_FILES=/usr/local/share/vulkan/icd.d/radeon_icd.x86_64.json:/usr/share/vulkan/icd.d/radeon_icd.i686.json
+export LD_LIBRARY_PATH="/usr/local/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
-export LIBVA_DRIVERS_PATH=~/.local/lib64/dri
+export LIBVA_DRIVERS_PATH=/usr/local/lib64/dri
 export LIBVA_DRIVER_NAME=radeonsi
-export VDPAU_DRIVER_PATH=~/.local/lib64/vdpau
+export VDPAU_DRIVER_PATH=/usr/local/lib64/vdpau
 export VDPAU_DRIVER=radeonsi
