@@ -73,8 +73,7 @@
     "material-icon-theme": true,
     "ruff": true,
     "toml": true,
-    "ty": true,
-    "xml": true
+    "ty": true
   },
   "languages": {
     "Python": {
