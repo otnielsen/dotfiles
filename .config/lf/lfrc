@@ -9,6 +9,7 @@ nmap D delete
 nmap E &zed $fx
 nmap X %unar $f
 nmap U %du -cshD $fx | tail -n 1
+nmap gn cd /mnt/nas/disk1
 
 cmd open ${{
     mime=$(file -bL --mime-type $f)
