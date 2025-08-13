@@ -26,3 +26,8 @@ Enable scx_loader and gamemoded services
 systemctl --user enable gamemoded
 sudo systemctl enable scx_loader
 ```
+
+## sshfs
+```shell
+jellyfin@192.168.1.213: /mnt/nas sshfs allow_other,default_permissions,_netdev,IdentityFile=/home/olive/.ssh/id_ed25519 0 0
+```
