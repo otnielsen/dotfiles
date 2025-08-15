@@ -9,7 +9,6 @@ export PROTONPATH=proton-cachyos
 export PROTON_ENABLE_WAYLAND=1
 export PROTON_USE_NTSYNC=1
 export PROTON_USE_WOW64=1
-export PROTON_PREFER_SDL=1
 export PROTON_FSR4_RDNA3_UPGRADE=1
 
 exec gamemoderun umu-run "$@"
