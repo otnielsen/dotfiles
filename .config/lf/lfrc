@@ -17,14 +17,14 @@ cmd open ${{
     case $mime in
         text/*)
             case $f in
-                *.md) PAGER="less -R" glow -pw $(tput cols) $f ;;
+                *.md) PAGER="less -RM" glow -pw $(tput cols) $f ;;
                 *) bat --paging=always -p $f
             esac
             ;;
         video/* | audio/*) mpv $f ;;
         application/json) jq . $f | bat --paging=always -pljson ;;
         application/x-xz | application/x-tar | application/gzip | application/vnd.rar | application/zip | application/x-7z-compressed)
-            lsar $f | tail -n +2 | tree -C --dirsfirst --fromfile | less -R
+            lsar $f | tail -n +2 | tree -C --dirsfirst --fromfile | less -RM
             ;;
         *) file -L $(basename $f); $SHELL
     esac

@@ -7,7 +7,7 @@ export XDG_CACHE_HOME=$HOME/.cache
 
 export EDITOR=micro
 export VISUAL=$EDITOR
-export PAGER="less -RF"
+export PAGER="less -RFM"
 export MANPAGER="bat --strip-ansi=always -plman"
 
 export CC=clang
