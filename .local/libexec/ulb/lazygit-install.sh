@@ -15,4 +15,4 @@ archive_name="lazygit_${version}_linux_x86_64.tar.gz"
 curl -fL --remote-name-all "https://github.com/jesseduffield/lazygit/releases/download/v${version}/{$archive_name,checksums.txt}"
 sha256sum -c --ignore-missing --quiet --strict checksums.txt
 tar -xf "$archive_name" lazygit
-rm "$archive_name"
+rm "$archive_name" checksums.txt

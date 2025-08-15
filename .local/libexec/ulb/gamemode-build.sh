@@ -19,7 +19,7 @@ archive_name="gamemode-${version}.tar.xz"
 curl -fL --remote-name-all "https://github.com/FeralInteractive/gamemode/releases/download/${version}/{$archive_name,sha256sums.txt}"
 sha256sum -c --ignore-missing --quiet --strict sha256sums.txt
 tar -xf "$archive_name"
-rm "$archive_name"
+rm "$archive_name" sha256sums.txt
 cd "gamemode-$version"
 
 compiler_args="-march=native -mtune=native -O3"

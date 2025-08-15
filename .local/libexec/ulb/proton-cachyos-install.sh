@@ -17,5 +17,5 @@ checksum_file_name="${base_name}.sha512sum"
 curl -fL --remote-name-all "https://github.com/CachyOS/proton-cachyos/releases/download/${version}/{$archive_name,$checksum_file_name}"
 sha512sum -c --ignore-missing --quiet --strict "$checksum_file_name"
 tar -xf "$archive_name"
-rm "$archive_name"
+rm "$archive_name" "$checksum_file_name"
 ln -snf "$base_name" proton-cachyos
