@@ -1,0 +1,4 @@
+byacc
+ncurses-devel
+libzip-devel
+libxml2-devel
