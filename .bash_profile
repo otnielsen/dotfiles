@@ -19,6 +19,8 @@ export NODE_REPL_HISTORY=$XDG_STATE_HOME/node_repl_history
 export MYSQL_HISTFILE=$XDG_STATE_HOME/mysql_history
 export PYTHON_HISTORY=$XDG_STATE_HOME/python_history
 
+export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
+
 export AMD_DEBUG=useaco
 
 export VK_DRIVER_FILES=/usr/local/share/vulkan/icd.d/radeon_icd.x86_64.json:/usr/share/vulkan/icd.d/radeon_icd.i686.json
