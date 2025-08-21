@@ -8,7 +8,7 @@ nmap <space> toggle
 nmap D delete
 nmap E &zed $fx
 nmap X %unar $f
-nmap U %du -cshD $fx | tail -n 1
+nmap U %du -shD $PWD
 nmap gn cd /mnt/nas/disk1
 
 cmd open ${{
