@@ -8,6 +8,11 @@ git clone git@192.168.1.213:/srv/git/dotfiles.git
 stow dotfiles
 ```
 
+## Locale and keyboard layout
+```shell
+sudo localectl set-x11-keymap us '' 'altgr-intl' 'caps:escape'
+```
+
 ## Power and performance
 ### lavd
 ```shell
