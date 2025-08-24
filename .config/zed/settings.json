@@ -5,7 +5,10 @@
     "metrics": false,
     "diagnostics": false
   },
+  "relative_line_numbers": true,
+  "soft_wrap": "editor_width",
   "terminal": {
+    "dock": "right",
     "env": {
       "EDITOR": "zed --wait",
       "VISUAL": "zed --wait"
