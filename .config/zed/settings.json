@@ -52,17 +52,9 @@
       }
     },
     "ty": {
-      "binary": {
-        "path": "/home/olive/.local/bin/ty",
-        "arguments": ["server"]
-      },
-      "initialization_options": {
-        "settings": {
-          "python": {
-            "ty": {
-              "disableLanguageServices": true
-            }
-          },
+      "settings": {
+        "ty": {
+          "disableLanguageServices": true,
           "diagnosticMode": "workspace"
         }
       }
