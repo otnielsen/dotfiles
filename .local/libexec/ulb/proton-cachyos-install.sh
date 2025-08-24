@@ -19,3 +19,4 @@ sha512sum -c --ignore-missing --quiet --strict "$checksum_file_name"
 tar -xf "$archive_name"
 rm "$archive_name" "$checksum_file_name"
 ln -snf "$base_name" proton-cachyos
+find -maxdepth 1 -name "proton-cachyos-*-slr-x86_64_v3" '!' -name "$base_name" -type d -delete
