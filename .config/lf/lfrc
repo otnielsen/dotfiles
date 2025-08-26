@@ -24,7 +24,7 @@ cmd open ${{
         video/* | audio/*) mpv $f ;;
         application/json) jq . $f | bat --paging=always -pljson ;;
         application/x-xz | application/x-tar | application/gzip | application/vnd.rar | application/zip | application/x-7z-compressed)
-            lsar $f | tail -n +2 | tree -C --dirsfirst --fromfile | less -RM
+            lsar $f | tail -n +2 | tree -aC --dirsfirst --fromfile | less -RM
             ;;
         *) file -L $(basename $f); $SHELL
     esac
