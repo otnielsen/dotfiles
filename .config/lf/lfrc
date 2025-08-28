@@ -18,7 +18,7 @@ cmd open ${{
         text/*)
             case $f in
                 *.md) PAGER="less -RM" glow -pw $(tput cols) $f ;;
-                *) bat --paging=always -p $f
+                *) bat --paging=always $f
             esac
             ;;
         video/* | audio/*) mpv $f ;;
