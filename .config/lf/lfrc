@@ -6,7 +6,6 @@ nmap i
 nmap <f-1>
 nmap <space> toggle
 nmap D delete
-nmap E &zed $fx
 nmap X %unar $f
 nmap U %du -shD $PWD
 nmap gn cd /mnt/nas/disk1
