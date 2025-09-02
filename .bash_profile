@@ -15,6 +15,10 @@ export CXX=clang++
 export CC_LD=mold
 export CXX_LD=mold
 
+export CFLAGS='-march=native -mtune=native -O2 -flto=thin -DNDEBUG'
+export CXXFLAGS="$CFLAGS"
+export LDFLAGS="$CFLAGS -fuse-ld=mold"
+
 export NODE_REPL_HISTORY=$XDG_STATE_HOME/node_repl_history
 export MYSQL_HISTFILE=$XDG_STATE_HOME/mysql_history
 export PYTHON_HISTORY=$XDG_STATE_HOME/python_history
