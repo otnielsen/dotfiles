@@ -3,10 +3,13 @@ name = olni0002
 email = olni0002@stud.kea.dk
 
 [diff]
-tool = zed
-
-[difftool "zed"]
-cmd = "zed --wait --diff $LOCAL $REMOTE"
+tool = nvimdiff
 
 [difftool]
+prompt = false
+
+[merge]
+tool = nvimdiff2
+
+[mergetool]
 prompt = false
