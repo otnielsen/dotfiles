@@ -8,6 +8,7 @@ export XDG_CACHE_HOME=$HOME/.cache
 export EDITOR=nvim
 export VISUAL=$EDITOR
 export PAGER="less -RFM"
+export BAT_PAGER="$PAGER"
 export MANPAGER="bat --strip-ansi=always -plman"
 
 export CC=clang
