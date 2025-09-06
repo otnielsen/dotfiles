@@ -11,12 +11,15 @@ nmap U %du -shD $PWD
 nmap gn cd /mnt/nas/disk1
 
 cmd open ${{
+    export PAGER='less -RM'
+    export BAT_PAGER=$PAGER
+
     mime=$(file -bL --mime-type $f)
 
     case $mime in
         text/*)
             case $f in
-                *.md) PAGER="less -RM" glow -pw $(tput cols) $f ;;
+                *.md) glow -pw $(tput cols) $f ;;
                 *) bat --paging=always $f
             esac
             ;;
