@@ -16,9 +16,11 @@ export CXX=clang++
 export CC_LD=mold
 export CXX_LD=mold
 
-export CFLAGS='-march=native -mtune=native -O2 -flto=thin -DNDEBUG'
+common_flags='-march=native -mtune=native -O2 -flto=thin'
+export CFLAGS="$common_flags -DNDEBUG"
 export CXXFLAGS="$CFLAGS"
-export LDFLAGS="$CFLAGS -fuse-ld=mold"
+export LDFLAGS="$common_flags -fuse-ld=mold"
+unset common_flags
 
 export NODE_REPL_HISTORY=$XDG_STATE_HOME/node_repl_history
 export MYSQL_HISTFILE=$XDG_STATE_HOME/mysql_history
