@@ -41,7 +41,6 @@ meson setup "$builddir" \
     -Dbuildtype=release \
     -Db_ndebug=if-release \
     -Damd-use-llvm=false \
-    -Dgallium-vdpau=enabled \
     -Dgallium-va=enabled
 
 ulimit -n 2048 # mold complains about too many open files with the default 1024
