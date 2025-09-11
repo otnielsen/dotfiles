@@ -9,5 +9,4 @@ libXrandr-devel
 byacc
 flex
 libXxf86vm-devel
-libvdpau-devel
 libva-devel
