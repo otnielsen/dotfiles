@@ -6,6 +6,7 @@ nmap i
 nmap <f-1>
 nmap <space> toggle
 nmap D delete
+nmap x &wl-copy $f && lf -remote "send $id echo 'Copied path to clipboard" # didn't work with %echo
 nmap X %unar $f
 nmap U %du -shD $PWD
 nmap gn cd /mnt/nas/disk1
