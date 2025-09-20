@@ -11,8 +11,6 @@ end)
 
 vim.o.breakindent = true
 
-vim.o.undofile = true
-
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
@@ -48,12 +46,14 @@ vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
-vim.keymap.set('n', '<leader>b', ':ls<CR>:b<Space>')
+vim.keymap.set('n', '<leader>t', '<cmd>terminal<CR>i')
 
 vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
+
+vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>')
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
@@ -94,15 +94,13 @@ require('lazy').setup({
       incremental_selection = { enable = true }
     }
   },
-  {
-    'nvim-treesitter/nvim-treesitter-context'
-  },
+  'nvim-treesitter/nvim-treesitter-context',
   'neovim/nvim-lspconfig',
   { 'mason-org/mason.nvim', opts = {} },
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {
-      ensure_installed = { 'jdtls', 'lemminx', 'superhtml', 'denols' }
+      ensure_installed = { 'jdtls', 'lemminx', 'denols', 'superhtml', 'cssls', 'html', 'jsonls', 'yamlls' }
     }
   },
   {
@@ -111,7 +109,8 @@ require('lazy').setup({
   },
   {
     'Saghen/blink.cmp',
-    version = '1.*',
+    dependencies = { 'rafamadriz/friendly-snippets' },
+    version = '*',
     opts = {
       completion = {
         documentation = { auto_show = true }
@@ -122,11 +121,23 @@ require('lazy').setup({
   { 'windwp/nvim-autopairs', event = 'InsertEnter', opts = {}, },
   { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {} },
   { 'j-hui/fidget.nvim', opts = {} },
-  'lewis6991/gitsigns.nvim'
+  'lewis6991/gitsigns.nvim',
+  {
+    'ibhagwan/fzf-lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require('fzf-lua').setup({ 'border-fused', files = { hidden = false } })
+
+      vim.keymap.set('n', '<leader>ff', FzfLua.files )
+      vim.keymap.set('n', '<leader>fb', FzfLua.buffers )
+
+      FzfLua.register_ui_select()
+    end
+  }
 })
 
-vim.lsp.enable({ 'bashls', 'ruff', 'ty', 'basedpyright', 'tombi' })
-vim.diagnostic.config({ virtual_lines = true })
+vim.lsp.enable({ 'bashls', 'ruff', 'ty', 'tombi' })
+vim.diagnostic.config({ virtual_lines = { current_line = true } })
 
 vim.lsp.config('jdtls', {
   init_options = {
@@ -147,24 +158,6 @@ vim.lsp.config('jdtls', {
         saveActions = {
           organizeImports = true
         }
-      }
-    }
-  }
-})
-
-vim.lsp.config('ty', {
-  settings = {
-    ty = {
-      disableLanguageServices = true
-    }
-  }
-})
-
-vim.lsp.config('basedpyright', {
-  settings = {
-    basedpyright = {
-      analysis = {
-        typeCheckingMode = 'off'
       }
     }
   }
