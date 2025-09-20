@@ -41,27 +41,13 @@
     "bash-language-server": {
       "binary": {
         "path": "/usr/bin/bash-language-server",
-        "arguments": ["start"]
-      }
-    },
-    "basedpyright": {
-      "settings": {
-        "basedpyright.analysis": {
-          "typeCheckingMode": "off"
-        }
-      }
-    },
-    "ty": {
-      "settings": {
-        "ty": {
-          "disableLanguageServices": true,
-          "diagnosticMode": "workspace"
-        }
+        "arguments": [
+          "start"
+        ]
       }
     }
   },
   "auto_install_extensions": {
-    "basedpyright": true,
     "basher": true,
     "emmet": true,
     "git-firefly": true,
@@ -73,7 +59,10 @@
   },
   "languages": {
     "Python": {
-      "language_servers": ["ruff", "ty", "basedpyright"],
+      "language_servers": [
+        "ruff",
+        "ty"
+      ],
       "code_actions_on_format": {
         "source.organizeImports.ruff": true,
         "source.fixAll.ruff": true
