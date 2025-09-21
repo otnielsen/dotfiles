@@ -1,2 +1,3 @@
 set completion-ignore-case
 set skip-completed-text
+set show-all-if-unmodified
