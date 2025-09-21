@@ -29,6 +29,7 @@ export MYSQL_HISTFILE=$XDG_STATE_HOME/mysql_history
 export PYTHON_HISTORY=$XDG_STATE_HOME/python_history
 
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
+export INPUTRC=$XDG_CONFIG_HOME/readline/inputrc
 
 export AMD_DEBUG=useaco
 
