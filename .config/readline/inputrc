@@ -1,5 +1,2 @@
-set editing-mode vi
-set vi-ins-mode-string ""
-set show-mode-in-prompt
 set completion-ignore-case
 set skip-completed-text
