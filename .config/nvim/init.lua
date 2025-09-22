@@ -126,7 +126,7 @@ require('lazy').setup({
     'ibhagwan/fzf-lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('fzf-lua').setup({ 'border-fused', files = { hidden = false } })
+      require('fzf-lua').setup({ 'border-fused', files = { hidden = false, actions = { ["enter"] = FzfLua.actions.file_edit } } })
 
       vim.keymap.set('n', '<leader>ff', FzfLua.files )
       vim.keymap.set('n', '<leader>fb', FzfLua.buffers )
