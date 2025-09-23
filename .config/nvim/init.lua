@@ -46,14 +46,22 @@ vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
-vim.keymap.set('n', '<leader>t', '<cmd>terminal<CR>i')
-
 vim.keymap.set('n', '<C-h>', '<C-w>h')
 vim.keymap.set('n', '<C-j>', '<C-w>j')
 vim.keymap.set('n', '<C-k>', '<C-w>k')
 vim.keymap.set('n', '<C-l>', '<C-w>l')
 
 vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>')
+
+local function pythonvenv()
+  if vim.fn.filereadable('.venv/bin/activate') == 1 then
+    return 'source .venv/bin/activate && clear<cr>'
+  else
+    return ''
+  end
+end
+
+vim.keymap.set('n', '<leader>t', '<cmd>terminal<CR>i' .. pythonvenv())
 
 -- Highlight when yanking (copying) text
 --  Try it with `yap` in normal mode
