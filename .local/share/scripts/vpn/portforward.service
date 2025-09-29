@@ -4,7 +4,7 @@ Description=Port forwarding for vpn and qBittorrent
 [Service]
 Type=exec
 ExecStart=/usr/local/bin/portforward.sh
-Restart=always
+Restart=on-failure
 
 [Install]
 WantedBy=multi-user.target
