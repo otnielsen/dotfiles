@@ -1,6 +1,6 @@
 set shellopts "-eu"
 set ifs "\n"
-set hidden true
+set hidden
 
 nmap <space> toggle
 nmap D delete
