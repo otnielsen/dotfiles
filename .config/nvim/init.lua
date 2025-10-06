@@ -46,22 +46,10 @@ vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
-vim.keymap.set('n', '<C-h>', '<C-w>h')
-vim.keymap.set('n', '<C-j>', '<C-w>j')
-vim.keymap.set('n', '<C-k>', '<C-w>k')
-vim.keymap.set('n', '<C-l>', '<C-w>l')
-
-vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>')
-
-local function pythonvenv()
-  if vim.fn.filereadable('.venv/bin/activate') == 1 then
-    return 'source .venv/bin/activate && clear<cr>'
-  else
-    return ''
-  end
-end
-
-vim.keymap.set('n', '<leader>t', '<cmd>terminal<CR>i' .. pythonvenv())
+vim.keymap.set({'n', 't'}, '<C-h>', '<cmd>wincmd h<cr>')
+vim.keymap.set({'n', 't'}, '<C-j>', '<cmd>wincmd j<cr>')
+vim.keymap.set({'n', 't'}, '<C-k>', '<cmd>wincmd k<cr>')
+vim.keymap.set({'n', 't'}, '<C-l>', '<cmd>wincmd l<cr>')
 
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
@@ -142,8 +130,45 @@ require('lazy').setup({
 
       vim.keymap.set('n', '<leader>ff', FzfLua.files )
       vim.keymap.set('n', '<leader>fb', FzfLua.buffers )
+      vim.keymap.set('n', '<leader>f\\', '<cmd>TermSelect<cr>')
 
       FzfLua.register_ui_select()
+    end
+  },
+  {
+    'akinsho/toggleterm.nvim',
+    config = function()
+      require('toggleterm').setup({
+        open_mapping = '<c-\\>',
+        direction = 'float',
+        on_create = function(term)
+          if term.cmd == nil and vim.fn.filereadable('.venv/bin/activate') == 1 then
+            require('toggleterm').exec('source .venv/bin/activate && clear', term.id, nil, nil, nil, nil, false)
+          end
+        end,
+        size = function(term)
+          if term.direction == 'horizontal' then
+            return vim.o.lines * 0.4
+          elseif term.direction == 'vertical' then
+            return vim.o.columns * 0.5
+          end
+        end
+      })
+
+      local Terminal = require('toggleterm.terminal').Terminal
+
+      local lazygit = Terminal:new({ cmd = 'lazygit' })
+      vim.keymap.set('n', '<leader>g', function() lazygit:toggle() end)
+
+      local lf = Terminal:new({ cmd = 'lf -command "source ~/.config/lf/toggleterm"' })
+      vim.keymap.set('n', '<leader>e', function() lf:toggle() end)
+
+      vim.keymap.set('n', '<leader>\\\\', '<cmd>ToggleTerm direction=float<CR>')
+      vim.keymap.set('n', '<leader>\\s', '<cmd>ToggleTerm direction=horizontal<CR>')
+      vim.keymap.set('n', '<leader>\\v', '<cmd>ToggleTerm direction=vertical<CR>')
+      vim.keymap.set('n', '<leader>\\n', '<cmd>TermNew<CR>')
+
+      vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>')
     end
   }
 })
