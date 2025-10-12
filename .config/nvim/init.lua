@@ -154,7 +154,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>\\\\', '<cmd>ToggleTerm direction=float<CR>')
       vim.keymap.set('n', '<leader>\\s', '<cmd>ToggleTerm direction=horizontal<CR>')
       vim.keymap.set('n', '<leader>\\v', '<cmd>ToggleTerm direction=vertical<CR>')
-      vim.keymap.set('n', '<leader>\\n', '<cmd>TermNew<CR>')
+      vim.keymap.set('n', '<leader>|', '<cmd>TermNew<CR>')
 
       vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>')
     end
