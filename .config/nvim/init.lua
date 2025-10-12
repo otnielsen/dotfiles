@@ -162,14 +162,14 @@ require('lazy').setup({
 vim.lsp.enable({ 'bashls', 'ruff', 'ty', 'tombi' })
 vim.diagnostic.config({ virtual_text = true })
 
-vim.fn.setenv('JDTLS_JVM_ARGS', '-javaagent:' .. vim.fn.stdpath('data') .. '/mason/packages/jdtls/lombok.jar') -- lombok support
+vim.env.JDTLS_JVM_ARGS = '-javaagent:' .. vim.fn.stdpath('data') .. '/mason/packages/jdtls/lombok.jar' -- lombok support
 vim.lsp.config('jdtls', {
   init_options = {
     settings = {
       java = {
         configuration = {
           maven = {
-            globalSettings = vim.fn.getenv('XDG_CONFIG_HOME') .. '/maven/settings.xml'
+            globalSettings = vim.env.XDG_CONFIG_HOME .. '/maven/settings.xml'
           }
         },
         saveActions = {
@@ -185,7 +185,7 @@ vim.lsp.config('lemminx', {
     settings = {
       xml = {
         server = {
-          workDir = vim.fn.getenv('XDG_CACHE_HOME') .. '/lemminx'
+          workDir = vim.env.XDG_CACHE_HOME .. '/lemminx'
 
         }
       }
