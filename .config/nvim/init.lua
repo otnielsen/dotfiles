@@ -199,6 +199,14 @@ require('lazy').setup({
       local lf = Terminal:new({ cmd = 'lf -command "source ~/.config/lf/toggleterm"' })
       vim.keymap.set('n', '<leader>e', function() lf:toggle() end)
 
+      local term_in_buf_dir = Terminal:new()
+      vim.keymap.set('n', '<leader>t',
+        function()
+          term_in_buf_dir.dir = vim.fn.expand('%:p:h')
+          term_in_buf_dir:toggle()
+        end
+      )
+
       vim.keymap.set('n', '<leader>\\\\', '<cmd>ToggleTerm direction=float<CR>')
       vim.keymap.set('n', '<leader>\\s', '<cmd>ToggleTerm direction=horizontal<CR>')
       vim.keymap.set('n', '<leader>\\v', '<cmd>ToggleTerm direction=vertical<CR>')
