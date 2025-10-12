@@ -51,6 +51,8 @@ vim.keymap.set({'n', 't'}, '<C-j>', '<cmd>wincmd j<cr>')
 vim.keymap.set({'n', 't'}, '<C-k>', '<cmd>wincmd k<cr>')
 vim.keymap.set({'n', 't'}, '<C-l>', '<cmd>wincmd l<cr>')
 
+vim.keymap.set('n', '<leader>i', '<cmd>edit ' .. vim.env.XDG_CONFIG_HOME .. '/nvim/init.lua<cr>')
+
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.o.foldlevelstart = 99
