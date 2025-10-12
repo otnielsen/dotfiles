@@ -114,13 +114,21 @@ require('lazy').setup({
     'ibhagwan/fzf-lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('fzf-lua').setup({ 'border-fused', files = { hidden = false, actions = { ["enter"] = FzfLua.actions.file_edit } } })
+      require('fzf-lua').setup({ 'border-fused', files = { hidden = false, actions = { ["enter"] = require('fzf-lua.actions').file_edit } } })
 
-      vim.keymap.set('n', '<leader>ff', FzfLua.files )
-      vim.keymap.set('n', '<leader>fb', FzfLua.buffers )
+      vim.keymap.set('n', '<leader>ff',
+        function()
+          if git_dir.code == 0 then
+            require('fzf-lua.providers.git').files()
+          else
+            require('fzf-lua.providers.files').files()
+          end
+        end
+      )
+      vim.keymap.set('n', '<leader>fb', require('fzf-lua.providers.buffers').buffers)
       vim.keymap.set('n', '<leader>f\\', '<cmd>TermSelect<cr>')
 
-      FzfLua.register_ui_select()
+      vim.ui.select = require('fzf-lua.providers.ui_select').ui_select
     end
   },
   {
