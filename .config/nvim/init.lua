@@ -169,11 +169,7 @@ require('lazy').setup({
       require('toggleterm').setup({
         open_mapping = '<c-\\>',
         direction = 'float',
-        on_create = function(term)
-          if term.cmd == nil and vim.fn.filereadable('.venv/bin/activate') == 1 then
-            require('toggleterm').exec('source .venv/bin/activate && clear', term.id, nil, nil, nil, nil, false)
-          end
-        end,
+        shell = '/bin/bash --rcfile ' .. vim.env.XDG_CONFIG_HOME .. '/bash/toggleterm_rcfile',
         size = function(term)
           if term.direction == 'horizontal' then
             return vim.o.lines * 0.4
