@@ -31,7 +31,7 @@ vim.o.scrolloff = 3
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
-vim.o.guicursor = ''
+vim.o.guicursor = 'a:blinkon0'
 
 vim.o.expandtab = true
 vim.o.tabstop = 4
