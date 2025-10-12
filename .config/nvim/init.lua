@@ -109,7 +109,26 @@ require('lazy').setup({
   { 'windwp/nvim-autopairs', event = 'InsertEnter', opts = {}, },
   { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {} },
   { 'j-hui/fidget.nvim', opts = {} },
-  'lewis6991/gitsigns.nvim',
+  {
+    'lewis6991/gitsigns.nvim',
+    config = function()
+      require('gitsigns').setup({
+        word_diff = true,
+        on_attach = function(bufnr)
+          local actions = require('gitsigns.actions')
+          vim.keymap.set('n', ']c', function() actions.nav_hunk('next') end, { buffer = bufnr })
+          vim.keymap.set('n', '[c', function() actions.nav_hunk('prev') end, { buffer = bufnr })
+
+          vim.keymap.set('n', '<leader>hp', actions.preview_hunk, { buffer = bufnr })
+
+          vim.keymap.set('n', '<leader>hb', function() actions.blame_line({ full = true }) end, { buffer = bufnr })
+
+          -- Text object
+          vim.keymap.set({'o', 'x'}, 'ih', actions.select_hunk, { buffer = bufnr })
+        end
+      })
+    end
+  },
   {
     'ibhagwan/fzf-lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
