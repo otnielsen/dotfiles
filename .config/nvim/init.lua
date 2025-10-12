@@ -186,7 +186,15 @@ require('lazy').setup({
       local Terminal = require('toggleterm.terminal').Terminal
 
       local lazygit = Terminal:new({ cmd = 'lazygit' })
-      vim.keymap.set('n', '<leader>g', function() lazygit:toggle() end)
+      vim.keymap.set('n', '<leader>g',
+        function()
+          if git_dir.code == 0 then
+            lazygit:toggle()
+          else
+            print('Not in a git repository')
+	  end
+        end
+      )
 
       local lf = Terminal:new({ cmd = 'lf -command "source ~/.config/lf/toggleterm"' })
       vim.keymap.set('n', '<leader>e', function() lf:toggle() end)
