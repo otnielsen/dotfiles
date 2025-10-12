@@ -196,7 +196,8 @@ require('lazy').setup({
         end
       )
 
-      local lf = Terminal:new({ cmd = 'lf -command "source ~/.config/lf/toggleterm"' })
+      local lf_pager = 'less -RM'
+      local lf = Terminal:new({ cmd = 'lf', env = { PAGER = lf_pager, BAT_PAGER = lf_pager } })
       vim.keymap.set('n', '<leader>e', function() lf:toggle() end)
 
       local term_in_buf_dir = Terminal:new()

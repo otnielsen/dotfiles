@@ -1,32 +1,28 @@
 set shellopts "-eu"
-set ifs "\n"
 set hidden
 
 nmap <space> toggle
 nmap D delete
-nmap x &wl-copy $f && lf -remote "send $id echo Copied path to clipboard" # didn't work with %echo
-nmap X %unar $f
-nmap U %du -shD $PWD
+nmap x &wl-copy "$f" && lf -remote "send $id echo Copied path to clipboard" # didn't work with %echo
+nmap X %unar "$f"
+nmap U %du -shD "$PWD"
 nmap gn cd /mnt/nas/disk1
 
 cmd open ${{
-    export PAGER='less -RM'
-    export BAT_PAGER=$PAGER
+    mime="$(file -bL --mime-type "$f")"
 
-    mime=$(file -bL --mime-type $f)
-
-    case $mime in
+    case "$mime" in
         text/*)
-            case $f in
-                *.md) glow -pw $(tput cols) $f ;;
-                *) bat --paging=always $f
+            case "$f" in
+                *.md) glow -pw $(tput cols) "$f" ;;
+                *) bat --paging=always "$f"
             esac
             ;;
-        video/* | audio/*) mpv $f ;;
-        application/json) jq . $f | bat --paging=always -pljson ;;
+        video/* | audio/*) mpv "$f" ;;
+        application/json) jq . "$f" | bat --paging=always -pljson ;;
         application/x-xz | application/x-tar | application/gzip | application/vnd.rar | application/zip | application/x-7z-compressed)
-            lsar $f | tail -n +2 | tree -aC --dirsfirst --fromfile | less -RM
+            lsar "$f" | tail -n +2 | tree -aC --dirsfirst --fromfile | $PAGER
             ;;
-        *) file -L $(basename $f); $SHELL
+        *) file -L "$(basename "$f")"; $SHELL
     esac
 }}

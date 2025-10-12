@@ -16,10 +16,13 @@ alias du='du -shD'
 alias lg='lazygit'
 alias dl='curl -fL --remote-name-all' # dl for download
 
-# copied verbatim from lf source code https://github.com/gokcehan/lf/blob/master/etc/lfcd.sh
 lfcd() {
     # `command` is needed in case `lfcd` is aliased to `lf`
-    cd "$(command lf -print-last-dir "$@")"
+    cd "$(
+        export PAGER='less -RM'
+        export BAT_PAGER="$PAGER"
+        command lf -print-last-dir "$@"
+    )" || return
 }
 
 alias lf='lfcd'
