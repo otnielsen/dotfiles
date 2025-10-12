@@ -86,7 +86,7 @@ require('lazy').setup({
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {
-      ensure_installed = { 'jdtls', 'lemminx', 'denols', 'superhtml', 'cssls', 'html', 'jsonls', 'yamlls' }
+      ensure_installed = { 'jdtls', 'lemminx', 'denols', 'html', 'cssls', 'jsonls', 'yamlls' }
     }
   },
   {
@@ -160,7 +160,7 @@ require('lazy').setup({
 })
 
 vim.lsp.enable({ 'bashls', 'ruff', 'ty', 'tombi' })
-vim.diagnostic.config({ virtual_lines = { current_line = true } })
+vim.diagnostic.config({ virtual_text = true })
 
 vim.fn.setenv('JDTLS_JVM_ARGS', '-javaagent:' .. vim.fn.stdpath('data') .. '/mason/packages/jdtls/lombok.jar') -- lombok support
 vim.lsp.config('jdtls', {
