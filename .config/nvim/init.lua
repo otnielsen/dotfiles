@@ -103,7 +103,7 @@ require('lazy').setup({
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {
-      ensure_installed = { 'jdtls', 'lemminx', 'denols', 'html', 'cssls', 'jsonls', 'yamlls' }
+      ensure_installed = { 'jdtls', 'lemminx', 'ts_ls', 'biome', 'superhtml', 'cssls', 'yamlls' }
     }
   },
   {
@@ -250,21 +250,57 @@ vim.lsp.config('lemminx', {
   }
 })
 
+vim.lsp.config('biome', {
+  workspace_required = false,
+  root_dir = function(bufnr, on_dir)
+    on_dir(workspace_root)
+  end,
+  settings = {
+    biome = {
+      configurationPath = vim.env.XDG_CONFIG_HOME .. '/biome/biome.json'
+    }
+  }
+})
+
+vim.lsp.config('cssls', {
+  settings = {
+    css = {
+      validate = false
+    }
+  }
+})
+
+local function lsp_on_attach(buf, client)
+  local fmt_disabled_clients = { 'ts_ls', 'superhtml' }
+  if not vim.tbl_contains(fmt_disabled_clients, client.name)
+      and not client:supports_method('textDocument/willSaveWaitUntil')
+      and client:supports_method('textDocument/formatting') then
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = vim.api.nvim_create_augroup('my.lsp', { clear=false }),
+      buffer = buf,
+      callback = function()
+        vim.lsp.buf.format({ bufnr = buf, id = client.id })
+      end
+    })
+  end
+
+end
+
+local orig_handler = vim.lsp.handlers['client/registerCapability']
+vim.lsp.handlers['client/registerCapability'] = function(err, result, ctx)
+  local result = orig_handler(err, result, ctx)
+  local client = vim.lsp.get_client_by_id(ctx.client_id)
+
+  lsp_on_attach(ctx.buf, client)
+
+  return result
+end
+
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('my.lsp', {}),
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
-    
-    if not client:supports_method('textDocument/willSaveWaitUntil')
-        and client:supports_method('textDocument/formatting') then
-      vim.api.nvim_create_autocmd('BufWritePre', {
-        group = vim.api.nvim_create_augroup('my.lsp', { clear=false }),
-        buffer = args.buf,
-        callback = function()
-          vim.lsp.buf.format({ bufnr = args.buf, id = client.id })
-        end
-      })
-    end
+    lsp_on_attach(args.buf, client)
   end
 })
 

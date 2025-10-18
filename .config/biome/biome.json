@@ -1,0 +1,10 @@
+{
+  "formatter": {
+    "indentStyle": "space"
+  },
+  "html": {
+    "formatter": {
+      "enabled": true
+    }
+  }
+}
