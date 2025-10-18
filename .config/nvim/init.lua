@@ -103,7 +103,7 @@ require('lazy').setup({
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {
-      ensure_installed = { 'jdtls', 'lemminx', 'ts_ls', 'biome', 'superhtml', 'cssls', 'yamlls' }
+      ensure_installed = { 'jdtls', 'lemminx', 'ts_ls', 'biome', 'superhtml', 'cssls', 'yamlls', 'lua_ls' }
     }
   },
   {
@@ -268,6 +268,26 @@ vim.lsp.config('cssls', {
       validate = false
     }
   }
+})
+
+local lua_default_markers = vim.lsp.config.lua_ls.root_markers
+vim.lsp.config('lua_ls', {
+  settings = {
+    Lua = {
+      runtime = {
+        version = 'LuaJIT',
+        path = { 'lua/?.lua', 'lua/?/init.lua' }
+      },
+      workspace = {
+        library = { vim.env.VIMRUNTIME }
+      }
+    }
+  },
+  workspace_required = true,
+  root_dir = function(bufnr, on_dir)
+    local lua_custom_markers = vim.list_extend(lua_default_markers, { 'lua' })
+    on_dir(vim.fs.root(bufnr, lua_custom_markers) or workspace_root or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':p:h'))
+  end,
 })
 
 local function lsp_on_attach(buf, client)
