@@ -1,11 +1,13 @@
+local workspace_root = nil
 local git_dir = vim.system({'git', '-C', vim.fn.expand('%:p:h'), 'rev-parse', '--show-toplevel'}):wait()
 if git_dir.code == 0 then
-  vim.fn.chdir(vim.trim(git_dir.stdout))
+  workspace_root = vim.trim(git_dir.stdout)
 else
-  local workspace_root = vim.fs.root(0, { '.venv', 'package.json', 'pom.xml' })
-  if workspace_root then
-    vim.fn.chdir(workspace_root)
-  end
+  workspace_root = vim.fs.root(0, { '.venv', 'package.json', 'pom.xml', 'biome.json' })
+end
+
+if workspace_root then
+  vim.fn.chdir(workspace_root)
 end
 
 vim.env.EDITOR = 'nvr -l --servername ' .. vim.v.servername
