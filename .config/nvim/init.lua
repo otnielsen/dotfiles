@@ -272,7 +272,7 @@ vim.lsp.config('cssls', {
 
 local function lsp_on_attach(buf, client)
   local fmt_disabled_clients = { 'ts_ls', 'superhtml' }
-  if not vim.tbl_contains(fmt_disabled_clients, client.name)
+  if not vim.list_contains(fmt_disabled_clients, client.name)
       and not client:supports_method('textDocument/willSaveWaitUntil')
       and client:supports_method('textDocument/formatting') then
     vim.api.nvim_create_autocmd('BufWritePre', {
