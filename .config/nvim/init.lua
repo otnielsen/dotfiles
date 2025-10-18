@@ -252,7 +252,7 @@ vim.lsp.config('lemminx', {
 
 vim.lsp.config('biome', {
   workspace_required = false,
-  root_dir = function(bufnr, on_dir)
+  root_dir = function(_, on_dir)
     on_dir(workspace_root)
   end,
   settings = {
