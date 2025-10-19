@@ -1,5 +1,5 @@
 local workspace_root = nil
-local git_dir = vim.system({'git', '-C', vim.fn.expand('%:p:h'), 'rev-parse', '--show-toplevel'}):wait()
+local git_dir = vim.system({ 'git', '-C', vim.fn.expand('%:p:h'), 'rev-parse', '--show-toplevel' }):wait()
 if git_dir.code == 0 then
   workspace_root = vim.trim(git_dir.stdout)
 else
@@ -61,10 +61,10 @@ vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
 vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
 vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
 
-vim.keymap.set({'n', 't'}, '<C-h>', '<cmd>wincmd h<cr>')
-vim.keymap.set({'n', 't'}, '<C-j>', '<cmd>wincmd j<cr>')
-vim.keymap.set({'n', 't'}, '<C-k>', '<cmd>wincmd k<cr>')
-vim.keymap.set({'n', 't'}, '<C-l>', '<cmd>wincmd l<cr>')
+vim.keymap.set({ 'n', 't' }, '<C-h>', '<cmd>wincmd h<cr>')
+vim.keymap.set({ 'n', 't' }, '<C-j>', '<cmd>wincmd j<cr>')
+vim.keymap.set({ 'n', 't' }, '<C-k>', '<cmd>wincmd k<cr>')
+vim.keymap.set({ 'n', 't' }, '<C-l>', '<cmd>wincmd l<cr>')
 
 vim.keymap.set('n', '<leader>i', '<cmd>edit ' .. vim.env.XDG_CONFIG_HOME .. '/nvim/init.lua<cr>')
 
@@ -94,8 +94,8 @@ require('lazy').setup({
       auto_install = true,
       highlight = { enable = true },
       indent = { enable = true },
-      incremental_selection = { enable = true }
-    }
+      incremental_selection = { enable = true },
+    },
   },
   'nvim-treesitter/nvim-treesitter-context',
   'neovim/nvim-lspconfig',
@@ -103,8 +103,8 @@ require('lazy').setup({
   {
     'mason-org/mason-lspconfig.nvim',
     opts = {
-      ensure_installed = { 'jdtls', 'lemminx', 'ts_ls', 'biome', 'superhtml', 'cssls', 'yamlls', 'lua_ls', 'stylua' }
-    }
+      ensure_installed = { 'jdtls', 'lemminx', 'ts_ls', 'biome', 'superhtml', 'cssls', 'yamlls', 'lua_ls', 'stylua' },
+    },
   },
   {
     'scottmckendry/cyberdream.nvim',
@@ -116,12 +116,12 @@ require('lazy').setup({
     version = '*',
     opts = {
       completion = {
-        documentation = { auto_show = true }
-      }
-    }
+        documentation = { auto_show = true },
+      },
+    },
   },
   { 'NMAC427/guess-indent.nvim', opts = {} },
-  { 'windwp/nvim-autopairs', event = 'InsertEnter', opts = {}, },
+  { 'windwp/nvim-autopairs', event = 'InsertEnter', opts = {} },
   { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {} },
   { 'j-hui/fidget.nvim', opts = {} },
   {
@@ -131,39 +131,46 @@ require('lazy').setup({
         word_diff = true,
         on_attach = function(bufnr)
           local actions = require('gitsigns.actions')
-          vim.keymap.set('n', ']c', function() actions.nav_hunk('next') end, { buffer = bufnr })
-          vim.keymap.set('n', '[c', function() actions.nav_hunk('prev') end, { buffer = bufnr })
+          vim.keymap.set('n', ']c', function()
+            actions.nav_hunk('next')
+          end, { buffer = bufnr })
+          vim.keymap.set('n', '[c', function()
+            actions.nav_hunk('prev')
+          end, { buffer = bufnr })
 
           vim.keymap.set('n', '<leader>hp', actions.preview_hunk, { buffer = bufnr })
 
-          vim.keymap.set('n', '<leader>hb', function() actions.blame_line({ full = true }) end, { buffer = bufnr })
+          vim.keymap.set('n', '<leader>hb', function()
+            actions.blame_line({ full = true })
+          end, { buffer = bufnr })
 
           -- Text object
-          vim.keymap.set({'o', 'x'}, 'ih', actions.select_hunk, { buffer = bufnr })
-        end
+          vim.keymap.set({ 'o', 'x' }, 'ih', actions.select_hunk, { buffer = bufnr })
+        end,
       })
-    end
+    end,
   },
   {
     'ibhagwan/fzf-lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('fzf-lua').setup({ 'border-fused', files = { hidden = false, actions = { ["enter"] = require('fzf-lua.actions').file_edit } } })
+      require('fzf-lua').setup({
+        'border-fused',
+        files = { hidden = false, actions = { ['enter'] = require('fzf-lua.actions').file_edit } },
+      })
 
-      vim.keymap.set('n', '<leader>ff',
-        function()
-          if git_dir.code == 0 then
-            require('fzf-lua.providers.git').files()
-          else
-            require('fzf-lua.providers.files').files()
-          end
+      vim.keymap.set('n', '<leader>ff', function()
+        if git_dir.code == 0 then
+          require('fzf-lua.providers.git').files()
+        else
+          require('fzf-lua.providers.files').files()
         end
-      )
+      end)
       vim.keymap.set('n', '<leader>fb', require('fzf-lua.providers.buffers').buffers)
       vim.keymap.set('n', '<leader>f\\', '<cmd>TermSelect<cr>')
 
       vim.ui.select = require('fzf-lua.providers.ui_select').ui_select
-    end
+    end,
   },
   {
     'akinsho/toggleterm.nvim',
@@ -178,33 +185,31 @@ require('lazy').setup({
           elseif term.direction == 'vertical' then
             return vim.o.columns * 0.5
           end
-        end
+        end,
       })
 
       local Terminal = require('toggleterm.terminal').Terminal
 
       local lazygit = Terminal:new({ cmd = 'lazygit' })
-      vim.keymap.set('n', '<leader>g',
-        function()
-          if git_dir.code == 0 then
-            lazygit:toggle()
-          else
-            print('Not in a git repository')
-	  end
+      vim.keymap.set('n', '<leader>g', function()
+        if git_dir.code == 0 then
+          lazygit:toggle()
+        else
+          print('Not in a git repository')
         end
-      )
+      end)
 
       local lf_pager = 'less -RM'
       local lf = Terminal:new({ cmd = 'lf', env = { PAGER = lf_pager, BAT_PAGER = lf_pager } })
-      vim.keymap.set('n', '<leader>e', function() lf:toggle() end)
+      vim.keymap.set('n', '<leader>e', function()
+        lf:toggle()
+      end)
 
       local term_in_buf_dir = Terminal:new()
-      vim.keymap.set('n', '<leader>t',
-        function()
-          term_in_buf_dir.dir = vim.fn.expand('%:p:h')
-          term_in_buf_dir:toggle()
-        end
-      )
+      vim.keymap.set('n', '<leader>t', function()
+        term_in_buf_dir.dir = vim.fn.expand('%:p:h')
+        term_in_buf_dir:toggle()
+      end)
 
       vim.keymap.set('n', '<leader>\\\\', '<cmd>ToggleTerm direction=float<CR>')
       vim.keymap.set('n', '<leader>\\s', '<cmd>ToggleTerm direction=horizontal<CR>')
@@ -212,8 +217,8 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>|', '<cmd>TermNew<CR>')
 
       vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>')
-    end
-  }
+    end,
+  },
 })
 
 vim.lsp.enable({ 'bashls', 'ruff', 'ty', 'tombi' })
@@ -226,15 +231,15 @@ vim.lsp.config('jdtls', {
       java = {
         configuration = {
           maven = {
-            globalSettings = vim.env.XDG_CONFIG_HOME .. '/maven/settings.xml'
-          }
+            globalSettings = vim.env.XDG_CONFIG_HOME .. '/maven/settings.xml',
+          },
         },
         saveActions = {
-          organizeImports = true
-        }
-      }
-    }
-  }
+          organizeImports = true,
+        },
+      },
+    },
+  },
 })
 
 vim.lsp.config('lemminx', {
@@ -242,12 +247,11 @@ vim.lsp.config('lemminx', {
     settings = {
       xml = {
         server = {
-          workDir = vim.env.XDG_CACHE_HOME .. '/lemminx'
-
-        }
-      }
-    }
-  }
+          workDir = vim.env.XDG_CACHE_HOME .. '/lemminx',
+        },
+      },
+    },
+  },
 })
 
 vim.lsp.config('biome', {
@@ -257,17 +261,17 @@ vim.lsp.config('biome', {
   end,
   settings = {
     biome = {
-      configurationPath = vim.env.XDG_CONFIG_HOME .. '/biome/biome.json'
-    }
-  }
+      configurationPath = vim.env.XDG_CONFIG_HOME .. '/biome/biome.json',
+    },
+  },
 })
 
 vim.lsp.config('cssls', {
   settings = {
     css = {
-      validate = false
-    }
-  }
+      validate = false,
+    },
+  },
 })
 
 local lua_default_markers = vim.lsp.config.lua_ls.root_markers
@@ -276,41 +280,46 @@ vim.lsp.config('lua_ls', {
     Lua = {
       runtime = {
         version = 'LuaJIT',
-        path = { 'lua/?.lua', 'lua/?/init.lua' }
+        path = { 'lua/?.lua', 'lua/?/init.lua' },
       },
       workspace = {
-        library = { vim.env.VIMRUNTIME }
+        library = { vim.env.VIMRUNTIME },
       },
       format = {
-        enable = false
-      }
-    }
+        enable = false,
+      },
+    },
   },
   workspace_required = true,
   root_dir = function(bufnr, on_dir)
     local lua_custom_markers = vim.list_extend(lua_default_markers, { 'lua' })
-    on_dir(vim.fs.root(bufnr, lua_custom_markers) or workspace_root or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':p:h'))
+    on_dir(
+      vim.fs.root(bufnr, lua_custom_markers)
+        or workspace_root
+        or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':p:h')
+    )
   end,
 })
 
 vim.lsp.config('stylua', {
-  cmd = { 'stylua', '--lsp', '--config-path', vim.env.XDG_CONFIG_HOME .. '/stylua/stylua.toml' }
+  cmd = { 'stylua', '--lsp', '--config-path', vim.env.XDG_CONFIG_HOME .. '/stylua/stylua.toml' },
 })
 
 local function lsp_on_attach(buf, client)
   local fmt_disabled_clients = { 'ts_ls', 'superhtml' }
-  if not vim.list_contains(fmt_disabled_clients, client.name)
-      and not client:supports_method('textDocument/willSaveWaitUntil')
-      and client:supports_method('textDocument/formatting') then
+  if
+    not vim.list_contains(fmt_disabled_clients, client.name)
+    and not client:supports_method('textDocument/willSaveWaitUntil')
+    and client:supports_method('textDocument/formatting')
+  then
     vim.api.nvim_create_autocmd('BufWritePre', {
-      group = vim.api.nvim_create_augroup('my.lsp', { clear=false }),
+      group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
       buffer = buf,
       callback = function()
         vim.lsp.buf.format({ bufnr = buf, id = client.id })
-      end
+      end,
     })
   end
-
 end
 
 local orig_handler = vim.lsp.handlers['client/registerCapability']
@@ -328,7 +337,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
     local client = vim.lsp.get_client_by_id(args.data.client_id)
     lsp_on_attach(args.buf, client)
-  end
+  end,
 })
 
 vim.cmd.colorscheme('cyberdream')
