@@ -221,7 +221,7 @@ require('lazy').setup({
   },
 })
 
-vim.lsp.enable({ 'bashls', 'ruff', 'ty', 'tombi' })
+vim.lsp.enable({ 'bashls', 'ruff', 'ty', 'basedpyright', 'clangd', 'tombi' })
 vim.diagnostic.config({ virtual_text = true })
 
 vim.env.JDTLS_JVM_ARGS = '-javaagent:' .. vim.fn.stdpath('data') .. '/mason/packages/jdtls/lombok.jar' -- lombok support
@@ -270,6 +270,24 @@ vim.lsp.config('cssls', {
   settings = {
     css = {
       validate = false,
+    },
+  },
+})
+
+vim.lsp.config('ty', {
+  settings = {
+    ty = {
+      disableLanguageServices = true,
+    },
+  },
+})
+
+vim.lsp.config('basedpyright', {
+  settings = {
+    basedpyright = {
+      analysis = {
+        typeCheckingMode = 'off',
+      },
     },
   },
 })
