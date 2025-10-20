@@ -3,19 +3,14 @@
   email = olni0002@stud.kea.dk
 
 [diff]
-  tool = difftastic
+  tool = nvimdiff
+  external = difft
 
 [difftool]
   prompt = false
-
-[difftool "difftastic"]
-  cmd = difft "$LOCAL" "$REMOTE"
 
 [merge]
   tool = nvimdiff2
 
 [mergetool]
   prompt = false
-
-[pager]
-  difftool = true
