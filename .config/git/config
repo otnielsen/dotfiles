@@ -1,15 +1,15 @@
 [user]
-name = olni0002
-email = olni0002@stud.kea.dk
+  name = olni0002
+  email = olni0002@stud.kea.dk
 
 [diff]
-tool = nvimdiff
+  tool = nvimdiff
 
 [difftool]
-prompt = false
+  prompt = false
 
 [merge]
-tool = nvimdiff2
+  tool = nvimdiff2
 
 [mergetool]
-prompt = false
+  prompt = false
