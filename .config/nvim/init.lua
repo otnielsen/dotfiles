@@ -102,9 +102,32 @@ require('lazy').setup({
   { 'mason-org/mason.nvim', opts = {} },
   {
     'mason-org/mason-lspconfig.nvim',
-    opts = {
-      ensure_installed = { 'jdtls', 'lemminx', 'ts_ls', 'biome', 'superhtml', 'cssls', 'yamlls', 'lua_ls', 'stylua' },
-    },
+    config = function()
+      local external_lsps = { 'bashls', 'ruff', 'clangd' }
+      local mason_lsps = {
+        'jdtls',
+        'lemminx',
+        'ts_ls',
+        'biome',
+        'superhtml',
+        'cssls',
+        'yamlls',
+        'lua_ls',
+        'stylua',
+        'basedpyright',
+        'ty',
+        'tombi',
+      }
+
+      require('mason-lspconfig').setup({
+        ensure_installed = mason_lsps,
+        automatic_enable = false,
+      })
+
+      if not vim.o.diff then
+        vim.lsp.enable(vim.list_extend(external_lsps, mason_lsps))
+      end
+    end,
   },
   {
     'scottmckendry/cyberdream.nvim',
@@ -221,7 +244,6 @@ require('lazy').setup({
   },
 })
 
-vim.lsp.enable({ 'bashls', 'ruff', 'ty', 'basedpyright', 'clangd', 'tombi' })
 vim.diagnostic.config({ virtual_text = true })
 
 vim.env.JDTLS_JVM_ARGS = '-javaagent:' .. vim.fn.stdpath('data') .. '/mason/packages/jdtls/lombok.jar' -- lombok support
