@@ -12,6 +12,7 @@ export VISUAL=$EDITOR
 export PAGER="less -RFM"
 export BAT_PAGER="$PAGER"
 export MANPAGER="bat --strip-ansi=always -plman"
+export FZF_DEFAULT_OPTS='--reverse --list-border --cycle --no-scrollbar'
 
 export CC=clang
 export CXX=clang++
