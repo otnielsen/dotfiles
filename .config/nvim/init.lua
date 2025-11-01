@@ -117,7 +117,7 @@ require('lazy').setup({
         'lua_ls',
         'stylua',
         'basedpyright',
-        'ty',
+        'pyrefly',
         'tombi',
       }
 
@@ -298,10 +298,13 @@ vim.lsp.config('cssls', {
   },
 })
 
-vim.lsp.config('ty', {
+vim.lsp.config('pyrefly', {
   settings = {
-    ty = {
-      disableLanguageServices = true,
+    python = {
+      pyrefly = {
+        disableLanguageServices = true,
+        displayTypeErrors = 'force-on',
+      },
     },
   },
 })
