@@ -232,9 +232,8 @@ require('lazy').setup({
         lf:toggle()
       end)
 
-      local term_in_buf_dir = Terminal:new()
       vim.keymap.set('n', '<leader>t', function()
-        term_in_buf_dir.dir = vim.fn.expand('%:p:h')
+        local term_in_buf_dir = Terminal:new({ dir = vim.fn.expand('%:p:h') })
         term_in_buf_dir:toggle()
       end)
 
