@@ -1,0 +1,6 @@
+set recolor
+set recolor-keephue
+set recolor-reverse-video
+set guioptions ""
+set render-loading false
+set selection-clipboard clipboard
