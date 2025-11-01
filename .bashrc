@@ -1,6 +1,17 @@
-bash_prompt_color_force=1
-source /etc/bashrc
-unset bash_prompt_color_force
+if [ -z "$TMUX" ]; then
+    tmux_unattached_sessions=$(tmux 'ls' -F '#{session_name}' -f '#{?session_attached,0,1}' 2>/dev/null)
+    if [ -n "$tmux_unattached_sessions" ]; then
+        res=$(fzf --preview="tmux capture-pane -peJt '{r}:' -S \"#{e|-:#{pane_bottom},\$(( \$FZF_PREVIEW_LINES - 1 ))}\"" <<<"$tmux_unattached_sessions")
+        if [ -n "$res" ]; then
+            exec tmux attach -t "$res"
+        fi
+    fi
+    exec tmux
+fi
+
+PS1='\[\e[36m\]\u@\h \w\n\[\e[39m\e]133;A\a\]$ '
+
+[ -z "$BASH_COMPLETION_VERSINFO" ] && [ -f /usr/share/bash-completion/bash_completion ] && source /usr/share/bash-completion/bash_completion
 
 HISTFILE=$XDG_STATE_HOME/bash_history
 
