@@ -1,3 +1,6 @@
 set completion-ignore-case
 set skip-completed-text
 set show-all-if-unmodified
+set mark-symlinked-directories
+set visible-stats
+set page-completions off
