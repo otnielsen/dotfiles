@@ -187,10 +187,13 @@ require('lazy').setup({
       })
 
       vim.keymap.set('n', '<leader>ff', function()
+        require('fzf-lua.providers.files').files()
+      end)
+      vim.keymap.set('n', '<leader>fg', function()
         if git_dir.code == 0 then
           require('fzf-lua.providers.git').files()
         else
-          require('fzf-lua.providers.files').files()
+          print('Not in a git repository')
         end
       end)
       vim.keymap.set('n', '<leader>fb', require('fzf-lua.providers.buffers').buffers)
