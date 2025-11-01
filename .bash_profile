@@ -32,15 +32,16 @@ export PYTHON_HISTORY=$XDG_STATE_HOME/python_history
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 export INPUTRC=$XDG_CONFIG_HOME/readline/inputrc
 
-export AMD_DEBUG=useaco
+vk_file='/usr/local/share/vulkan/icd.d/radeon_icd.x86_64.json'
+if [ -f "$vk_file" ]; then
+    export AMD_DEBUG=useaco # remove this line when mesa 26.0 is available as that will use aco for radeonsi by default
 
-export VK_DRIVER_FILES=/usr/local/share/vulkan/icd.d/radeon_icd.x86_64.json:/usr/share/vulkan/icd.d/radeon_icd.i686.json
+    export VK_DRIVER_FILES="$vk_file:/usr/share/vulkan/icd.d/radeon_icd.i686.json"
 
-if ! [[ "$LD_LIBRARY_PATH" =~ /usr/local/lib64 ]]; then
-    export LD_LIBRARY_PATH="/usr/local/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    if ! [[ "$LD_LIBRARY_PATH" =~ /usr/local/lib64 ]]; then
+        export LD_LIBRARY_PATH="/usr/local/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+    fi
+
+    export LIBVA_DRIVERS_PATH=/usr/local/lib64/dri
+    export LIBVA_DRIVER_NAME=radeonsi
 fi
-
-export LIBVA_DRIVERS_PATH=/usr/local/lib64/dri
-export LIBVA_DRIVER_NAME=radeonsi
-export VDPAU_DRIVER_PATH=/usr/local/lib64/vdpau
-export VDPAU_DRIVER=radeonsi
