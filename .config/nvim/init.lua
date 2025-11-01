@@ -31,6 +31,8 @@ vim.o.smartcase = true
 
 vim.o.signcolumn = 'yes'
 
+vim.o.winborder = 'rounded'
+
 -- Configure how new splits should be opened
 vim.o.splitright = true
 vim.o.splitbelow = true
