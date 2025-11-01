@@ -70,6 +70,8 @@ vim.keymap.set({ 'n', 't' }, '<C-l>', '<cmd>wincmd l<cr>')
 
 vim.keymap.set('n', '<leader>i', '<cmd>edit ' .. vim.env.XDG_CONFIG_HOME .. '/nvim/init.lua<cr>')
 
+vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>')
+
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.o.foldlevelstart = 99
@@ -240,8 +242,6 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>\\s', '<cmd>ToggleTerm direction=horizontal<CR>')
       vim.keymap.set('n', '<leader>\\v', '<cmd>ToggleTerm direction=vertical<CR>')
       vim.keymap.set('n', '<leader>|', '<cmd>TermNew<CR>')
-
-      vim.keymap.set('t', '<esc><esc>', '<C-\\><C-n>')
     end,
   },
 })
