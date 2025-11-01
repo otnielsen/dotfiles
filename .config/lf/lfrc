@@ -1,5 +1,6 @@
 set shellopts "-eu"
 set hidden
+set filtermethod glob
 
 nmap <space> toggle
 nmap D delete
