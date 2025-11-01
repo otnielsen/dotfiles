@@ -31,7 +31,7 @@ ff() {
     # todo: add a case to use different program depending on filetype
     #       like zathura for pdf, mpv for video etc.
     local res
-    res="$(fzf --reverse)"
+    res=$(fzf)
     if [ -n "$res" ]; then
         nvim "$res"
     fi
