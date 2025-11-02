@@ -48,4 +48,4 @@ fi
 unset vk_file
 
 # shellcheck source=/dev/null
-[[ $- =~ i ]] && [ -f ~/.bashrc ] && source ~/.bashrc
+[ -f ~/.bashrc ] && source ~/.bashrc

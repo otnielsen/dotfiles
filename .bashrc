@@ -1,3 +1,6 @@
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
 if [ -z "$TMUX" ]; then
     tmux_unattached_sessions=$(tmux 'ls' -F '#{session_name}' -f '#{?session_attached,0,1}' 2>/dev/null)
     if [ -n "$tmux_unattached_sessions" ]; then
