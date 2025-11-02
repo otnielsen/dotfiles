@@ -18,11 +18,15 @@ HISTFILE=$XDG_STATE_HOME/bash_history
 alias mvn='mvn -gs $XDG_CONFIG_HOME/maven/settings.xml'
 alias gearlever='flatpak run it.mijorus.gearlever'
 
-alias diff='diff --color=auto'
 alias grep='grep --color=auto'
+alias egrep='grep -E --color=auto'
+alias fgrep='grep -F --color=auto'
+
+alias diff='diff --color=auto'
 alias ls='ls --color=auto --group-directories-first'
 alias tree='tree -alI .git --dirsfirst'
 alias du='du -shD'
+alias which='(alias; declare -f) | which --tty-only --read-alias --read-functions --show-tilde --show-dot'
 
 alias lg='lazygit'
 alias dl='curl -fL --remote-name-all' # dl for download
