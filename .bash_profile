@@ -48,4 +48,4 @@ fi
 unset vk_file
 
 # shellcheck source=/dev/null
-[ -n "$PS1" ] && [ -f ~/.bashrc ] && source ~/.bashrc
+[[ $- =~ i ]] && [ -f ~/.bashrc ] && source ~/.bashrc
