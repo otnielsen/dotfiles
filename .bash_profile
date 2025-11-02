@@ -45,3 +45,6 @@ if [ -f "$vk_file" ]; then
     export LIBVA_DRIVERS_PATH=/usr/local/lib64/dri
     export LIBVA_DRIVER_NAME=radeonsi
 fi
+
+# shellcheck source=/dev/null
+[ -n "$PS1" ] && [ -f ~/.bashrc ] && source ~/.bashrc
