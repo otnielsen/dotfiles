@@ -14,7 +14,7 @@ while true; do
         fi
     else
         systemctl stop 'wg-quick@wg0.service'
-        fping -q ip.me && systemtl start 'wg-quick@wg0.service'
+        fping -q ip.me && systemctl start 'wg-quick@wg0.service'
     fi
     sleep 45
 done
