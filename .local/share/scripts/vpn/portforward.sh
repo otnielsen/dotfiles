@@ -12,6 +12,9 @@ while true; do
         if [ "$(curl --no-progress-meter http://localhost:8080/api/v2/app/preferences | jq .listen_port)" != "$listen_port" ]; then
             curl --no-progress-meter -d "json={\"listen_port\": $listen_port}" http://localhost:8080/api/v2/app/setPreferences
         fi
+    else
+        systemctl stop 'wg-quick@wg0.service'
+        fping -q ip.me && systemtl start 'wg-quick@wg0.service'
     fi
     sleep 45
 done
