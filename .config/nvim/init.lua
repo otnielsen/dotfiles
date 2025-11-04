@@ -119,6 +119,7 @@ require('lazy').setup({
         'basedpyright',
         'pyrefly',
         'tombi',
+        'tinymist',
       }
 
       require('mason-lspconfig').setup({
@@ -316,6 +317,14 @@ vim.lsp.config('basedpyright', {
         typeCheckingMode = 'off',
       },
     },
+  },
+})
+
+vim.lsp.config('tinymist', {
+  settings = {
+    exportPdf = 'onType',
+    formatterMode = 'typstyle',
+    formatterProseWrap = true,
   },
 })
 
