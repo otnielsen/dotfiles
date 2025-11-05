@@ -321,10 +321,17 @@ vim.lsp.config('basedpyright', {
 })
 
 vim.lsp.config('tinymist', {
-  settings = {
-    exportPdf = 'onType',
+  init_options = {
     formatterMode = 'typstyle',
     formatterProseWrap = true,
+    lint = {
+      enabled = true,
+    },
+    preview = {
+      background = {
+        enabled = true,
+      },
+    },
   },
 })
 
