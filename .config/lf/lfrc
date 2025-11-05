@@ -29,7 +29,7 @@ cmd open ${{
 }}
 
 map <c-f> ${{
-    res="$(fzf --reverse)"
+    res="$(fzf)"
     if [ -n "$res" ]; then
         lf -remote "send $id select \"$res\""
     fi
