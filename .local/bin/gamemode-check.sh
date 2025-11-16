@@ -7,7 +7,7 @@ clock_speed=$(grep MHz /proc/cpuinfo)
 
 gamemoded -s
 scxctl get
-echo "hidecursor loaded? $(qdbus org.kde.KWin /Effects isEffectLoaded hidecursor)"
+echo "hidecursor loaded? $(busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects isEffectLoaded s hidecursor | awk '{ print $2 }')"
 
 echo '#### governor ####'
 cat /sys/devices/system/cpu/cpufreq/policy*/scaling_governor
