@@ -1,11 +1,17 @@
 # Setup personal computer
 
-## Stow
+## Config files
+### Stow
 ```shell
 mkdir ~/stow
 cd ~/stow
 git clone git@192.168.1.213:/srv/git/dotfiles.git
 stow dotfiles
+```
+### System configs
+Copy files that go in system directory instead of the home directory.
+```shell
+~/.config/scripts/system/rsync.sh
 ```
 
 ## Locale and keyboard layout
@@ -14,10 +20,6 @@ sudo localectl set-x11-keymap us '' 'altgr-intl' 'caps:escape'
 ```
 
 ## Power and performance
-### lavd
-```shell
-echo 'default_sched = "scx_lavd"' | sudo tee /etc/scx_loader.toml
-```
 ### grub
 Set GRUB_TIMEOUT=0 and add "amd_pstate=guided" to GRUB_CMDLINE_LINUX in /etc/default/grub.
 Then update grub configuration

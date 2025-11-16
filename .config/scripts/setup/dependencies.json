@@ -39,6 +39,7 @@
   "python3",
   "rg",
   "rm",
+  "rsync",
   "ruff",
   "scxctl",
   "sed",
