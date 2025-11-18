@@ -29,8 +29,6 @@ meson setup "$builddir" \
     -Dvulkan-drivers=amd \
     -Dgallium-drivers=radeonsi \
     -Dplatforms=wayland,x11 \
-    -Db_lto=true \
-    -Db_lto_mode=thin \
     -Dvideo-codecs=all \
     -Dc_args="$compiler_args" \
     -Dcpp_args="$compiler_args" \
