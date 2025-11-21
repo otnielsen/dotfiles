@@ -21,6 +21,7 @@ export CXX=clang++
 export CFLAGS='-march=native -mtune=native -O3 -flto=thin -DNDEBUG'
 export CXXFLAGS="$CFLAGS"
 export LDFLAGS="$CFLAGS -fuse-ld=mold -s -Wl,--as-needed"
+export CMAKE_GENERATOR=Ninja
 
 export NODE_REPL_HISTORY=$XDG_STATE_HOME/node_repl_history
 export MYSQL_HISTFILE=$XDG_STATE_HOME/mysql_history
