@@ -19,14 +19,6 @@ Copy files that go in system directory instead of the home directory.
 sudo localectl set-x11-keymap us '' 'altgr-intl' 'caps:escape'
 ```
 
-## Power and performance
-### grub
-Set GRUB_TIMEOUT=0 and add "amd_pstate=guided" to GRUB_CMDLINE_LINUX in /etc/default/grub.
-Then update grub configuration
-```shell
-sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-```
-
 ## systemd
 Enable scx_loader and gamemoded services
 ```shell

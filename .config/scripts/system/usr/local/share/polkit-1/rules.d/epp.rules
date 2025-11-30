@@ -1,0 +1,8 @@
+polkit.addRule(function (action, subject) {
+  if (
+    action.id === "dk.otnielsen.gamemode-epp" &&
+    subject.isInGroup("gamemode")
+  ) {
+    return polkit.Result.YES;
+  }
+});
