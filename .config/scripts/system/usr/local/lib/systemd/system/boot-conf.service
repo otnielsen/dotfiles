@@ -1,0 +1,10 @@
+[Unit]
+Description=Configure system options on boot
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/libexec/boot-conf.sh
+
+[Install]
+WantedBy=multi-user.target
