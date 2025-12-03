@@ -2,5 +2,6 @@
 
 # script to run on system boot
 
-# use amd p-state guided autonomous mode
-echo guided >/sys/devices/system/cpu/amd_pstate/status
+for epp in /sys/devices/system/cpu/cpufreq/policy*/energy_performance_preference; do
+    echo power >"$epp"
+done

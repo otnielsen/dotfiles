@@ -8,7 +8,7 @@ set -eu
 
 case "$1" in
 gaming) pref=performance ;;
-default) pref=default ;;
+default) pref=power ;;
 esac
 
 for epp in /sys/devices/system/cpu/cpufreq/policy*/energy_performance_preference; do
