@@ -2,9 +2,6 @@
 
 set -eu
 
-# get clock speed first so retrieval of information doesn't affect it
-clock_speed=$(grep 'cpu MHz' /proc/cpuinfo)
-
 gamemoded -s
 scxctl get
 
@@ -16,6 +13,3 @@ cat /sys/devices/system/cpu/cpufreq/policy*/scaling_governor | sort -u
 
 printf 'epp: '
 cat /sys/devices/system/cpu/cpufreq/policy*/energy_performance_preference | sort -u
-
-echo '#### cpu clock ####'
-echo "$clock_speed" | sort | uniq -c
