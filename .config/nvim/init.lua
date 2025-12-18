@@ -188,6 +188,9 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>ff', function()
         require('fzf-lua.providers.files').files()
       end)
+      vim.keymap.set('n', '<leader>fl', function()
+        require('fzf-lua.providers.grep').grep()
+      end)
       vim.keymap.set('n', '<leader>fg', function()
         if git_dir.code == 0 then
           require('fzf-lua.providers.git').files()
