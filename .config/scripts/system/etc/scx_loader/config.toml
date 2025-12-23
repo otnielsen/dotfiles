@@ -1,1 +1,1 @@
-default_sched = "scx_lavd"
+# "default_sched" is intentionally omitted so no scheduler starts on service launch
