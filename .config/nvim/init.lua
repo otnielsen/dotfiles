@@ -380,7 +380,10 @@ local function lsp_on_attach(buf, client)
       group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
       buffer = buf,
       callback = function()
-        vim.lsp.buf.format({ bufnr = buf, id = client.id })
+        local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
+        if vim.list_contains(client.config.filetypes, buf_ft) then
+          vim.lsp.buf.format({ bufnr = buf, id = client.id })
+        end
       end,
     })
   end
