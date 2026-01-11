@@ -34,3 +34,28 @@ map <c-f> ${{
         lf -remote "send $id select \"$res\""
     fi
 }}
+
+cmd ln %{{
+    IFS=$(printf '\n\t')
+
+    list=$(tail -n +2 ~/.local/share/lf/files)
+
+    if [ -n "$list" ]; then
+        for target in $list; do
+            link=$(basename "$target")
+
+            i=0
+            suffix=''
+            while [ -e "$link$suffix" ]; do
+                i=$((i + 1))
+                suffix=".~${i}~"
+            done
+
+            ln -sr "$target" "$link$suffix"
+        done
+
+        lf -remote "send $id echo Symlinked successfully"
+    else
+        lf -remote "send $id echo ln: no files in clipboard"
+    fi
+}}
