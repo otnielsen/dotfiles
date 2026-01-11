@@ -2,13 +2,18 @@
 [ -z "$PS1" ] && return
 
 if [ -z "$TMUX" ]; then
-    tmux_unattached_sessions=$(tmux 'ls' -F '#{session_name}' -f '#{?session_attached,0,1}' 2>/dev/null)
-    if [ -n "$tmux_unattached_sessions" ]; then
-        res=$(fzf --preview="tmux capture-pane -peJt '{r}:' -S \"#{e|-:#{pane_bottom},\$(( \$FZF_PREVIEW_LINES - 1 ))}\"" <<<"$tmux_unattached_sessions")
+    mapfile -t tmux_unattached_sessions < <(tmux 'ls' -F '#{session_name}' -f '#{?session_attached,0,1}' 2>/dev/null)
+    case ${#tmux_unattached_sessions[@]} in
+    0) ;;
+    1) exec tmux attach -t "${tmux_unattached_sessions[0]}" ;;
+    *)
+        res=$(printf '%s\n' "${tmux_unattached_sessions[@]}" | fzf --preview="tmux capture-pane -peJt '{r}:' -S \"#{e|-:#{pane_bottom},\$(( \$FZF_PREVIEW_LINES - 1 ))}\"")
         if [ -n "$res" ]; then
             exec tmux attach -t "$res"
         fi
-    fi
+        ;;
+    esac
+
     exec tmux
 fi
 
