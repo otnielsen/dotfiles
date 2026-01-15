@@ -5,6 +5,8 @@ set -eu
 gateway='10.2.0.1'
 interface='wg0'
 
+wg show interfaces | grep -xq "$interface" || wg-quick up "$interface"
+
 while true; do
     if fping -q $gateway; then
         natpmpc -g $gateway -a 1 0 tcp

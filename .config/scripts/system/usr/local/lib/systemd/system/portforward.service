@@ -4,6 +4,7 @@ Description=Port forwarding for vpn and qBittorrent
 [Service]
 Type=exec
 ExecStart=/usr/local/bin/portforward.sh
+ExecStop=/bin/sh -c 'wg show interfaces | grep -xq wg0 && wg-quick down wg0'
 Restart=on-failure
 
 [Install]
