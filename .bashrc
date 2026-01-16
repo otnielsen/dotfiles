@@ -26,7 +26,7 @@ HISTFILE=$XDG_STATE_HOME/bash_history
 alias mvn='mvn -gs $XDG_CONFIG_HOME/maven/settings.xml'
 alias gearlever='flatpak run it.mijorus.gearlever'
 
-alias rm='rm -i'
+alias rm='rm -I'
 alias cp='cp -i'
 alias mv='mv -i'
 
