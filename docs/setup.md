@@ -28,5 +28,5 @@ sudo systemctl enable scx_loader
 
 ## sshfs
 ```shell
-jellyfin@192.168.1.213: /mnt/nas sshfs allow_other,default_permissions,_netdev,x-systemd.automount,IdentityFile=/home/olive/.ssh/id_ed25519 0 0
+jellyfin@192.168.1.213: /mnt/nas sshfs allow_other,default_permissions,_netdev,reconnect,x-systemd.automount,IdentityFile=/home/olive/.ssh/id_ed25519 0 0
 ```
