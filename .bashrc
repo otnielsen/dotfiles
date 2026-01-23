@@ -17,7 +17,25 @@ if [ -z "$TMUX" ]; then
     exec tmux
 fi
 
-PS1='\[\e[36m\]\u@\h \w\n\[\e[39m\e]133;A\a\]$ '
+# shellcheck disable=SC2034
+GIT_PS1_SHOWDIRTYSTATE=1
+# shellcheck disable=SC2034
+GIT_PS1_SHOWUNTRACKEDFILES=1
+# shellcheck disable=SC2034
+GIT_PS1_SHOWSTASHSTATE=1
+
+# shellcheck source=/dev/null
+source ~/.config/bash/git-prompt.sh
+
+PROMPT_COMMAND='
+    if [ "$?" = "0" ]; then
+        _COLOR=$(printf "\e[0m")
+    else
+        _COLOR=$(printf "\e[31m")
+    fi
+'
+
+PS1='\[\e[36m\]\u@\h \w$(__git_ps1)\n\[\e]133;A\a${_COLOR}\]$\[\e[0m\] '
 
 [ -z "$BASH_COMPLETION_VERSINFO" ] && [ -f /usr/share/bash-completion/bash_completion ] && source /usr/share/bash-completion/bash_completion
 
