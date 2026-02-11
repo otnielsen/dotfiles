@@ -17,15 +17,19 @@ if [ -z "$TMUX" ]; then
     exec tmux
 fi
 
-# shellcheck disable=SC2034
-GIT_PS1_SHOWDIRTYSTATE=1
-# shellcheck disable=SC2034
-GIT_PS1_SHOWUNTRACKEDFILES=1
-# shellcheck disable=SC2034
-GIT_PS1_SHOWSTASHSTATE=1
+git_show_head() {
+    # show nothing if not in a git worktree
+    [ "$(git rev-parse --is-inside-work-tree 2>/dev/null)" = true ] || return
 
-# shellcheck source=/dev/null
-source ~/.config/bash/git-prompt.sh
+    local head
+    head=$(git symbolic-ref --short -q HEAD)
+    [ -n "$head" ] && printf " (%s)" "$head" && return
+
+    head=$(git describe --tags --exact-match HEAD 2>/dev/null)
+    [ -n "$head" ] && printf " ((%s))" "$head" && return
+
+    printf " ((%s...))" "$(git rev-parse --short HEAD)"
+}
 
 PROMPT_COMMAND='
     if [ "$?" = "0" ]; then
@@ -35,7 +39,7 @@ PROMPT_COMMAND='
     fi
 '
 
-PS1='\[\e[36m\]\u@\h \w$(__git_ps1)\n\[\e]133;A\a${_COLOR}\]$\[\e[0m\] '
+PS1='\[\e[36m\]\u@\h \w$(git_show_head)\n\[\e]133;A\a${_COLOR}\]$\[\e[0m\] '
 
 [ -z "$BASH_COMPLETION_VERSINFO" ] && [ -f /usr/share/bash-completion/bash_completion ] && source /usr/share/bash-completion/bash_completion
 
