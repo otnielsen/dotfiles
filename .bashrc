@@ -85,3 +85,8 @@ ff() {
         nvim "$res"
     fi
 }
+
+gtl() {
+    # mnemonic: git-top-level
+    cd "$(git rev-parse --show-toplevel)" || return
+}
