@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -eu
+
+fullname="$1"
+if [ ! -f "$fullname" ]; then
+    echo "$fullname: no such file" >&2
+    exit 1
+fi
+
+if [ "$(file -b --mime-type "$fullname")" != application/vnd.microsoft.portable-executable ]; then
+    echo "$fullname: not a windows executable" >&2
+    exit 1
+fi
+
+basename=$(basename -s .exe "$fullname")
+png_name="${basename}.png"
+
+if [ -e "$png_name" ]; then
+    echo "$png_name: file exists" >&2
+    exit 1
+fi
+
+ico_file=$(mktemp --suffix=.ico)
+
+icoextract "$fullname" "$ico_file"
+largest=$(identify "$ico_file" | sort -rnk 3 | awk '{ print $1; exit }')
+magick "$largest" "$png_name"
+
+rm -f "$ico_file"
