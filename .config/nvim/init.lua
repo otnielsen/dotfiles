@@ -370,6 +370,27 @@ vim.lsp.config('stylua', {
 })
 
 local function lsp_on_attach(buf, client)
+  local code_actions = function() end
+
+  if client.name == 'ruff' then
+    code_actions = function()
+      local enabled_actions = { 'source.organizeImports.ruff', 'source.fixAll.ruff' }
+
+      local params = vim.lsp.util.make_range_params(0, client.offset_encoding)
+      params.context = { diagnostics = {}, only = enabled_actions }
+
+      local action_result = client:request_sync('textDocument/codeAction', params)
+
+      for _, action in pairs(action_result.result) do
+        local resolve_result = client:request_sync('codeAction/resolve', action)
+
+        if resolve_result.result.edit then
+          vim.lsp.util.apply_workspace_edit(resolve_result.result.edit, client.offset_encoding)
+        end
+      end
+    end
+  end
+
   local fmt_disabled_clients = { 'ts_ls', 'superhtml' }
   if
     not vim.list_contains(fmt_disabled_clients, client.name)
@@ -383,6 +404,7 @@ local function lsp_on_attach(buf, client)
         local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
         if vim.list_contains(client.config.filetypes, buf_ft) then
           vim.lsp.buf.format({ bufnr = buf, id = client.id })
+          code_actions()
         end
       end,
     })
