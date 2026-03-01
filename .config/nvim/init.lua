@@ -323,6 +323,22 @@ vim.lsp.config('basedpyright', {
   },
 })
 
+vim.lsp.config('ruff', {
+  init_options = {
+    settings = {
+      configurationPreference = 'filesystemFirst',
+      configuration = {
+        ['target-version'] = 'py314',
+        format = {
+          ['quote-style'] = 'single',
+        },
+      },
+      -- https://peps.python.org/pep-0008/#maximum-line-length
+      lineLength = 79,
+    },
+  },
+})
+
 vim.lsp.config('tinymist', {
   init_options = {
     formatterMode = 'typstyle',
