@@ -180,28 +180,25 @@ require('lazy').setup({
     'ibhagwan/fzf-lua',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      require('fzf-lua').setup({
+      local fzf_lua = require('fzf-lua')
+      fzf_lua.setup({
         'border-fused',
-        files = { hidden = false, actions = { ['enter'] = require('fzf-lua.actions').file_edit } },
+        files = { hidden = false, actions = { ['enter'] = fzf_lua.actions.file_edit } },
       })
 
-      vim.keymap.set('n', '<leader>ff', function()
-        require('fzf-lua.providers.files').files()
-      end)
-      vim.keymap.set('n', '<leader>fl', function()
-        require('fzf-lua.providers.grep').grep()
-      end)
+      vim.keymap.set('n', '<leader>ff', fzf_lua.files)
+      vim.keymap.set('n', '<leader>fl', fzf_lua.grep)
       vim.keymap.set('n', '<leader>fg', function()
         if git_dir.code == 0 then
-          require('fzf-lua.providers.git').files()
+          fzf_lua.git_files()
         else
           print('Not in a git repository')
         end
       end)
-      vim.keymap.set('n', '<leader>fb', require('fzf-lua.providers.buffers').buffers)
+      vim.keymap.set('n', '<leader>fb', fzf_lua.buffers)
       vim.keymap.set('n', '<leader>f\\', '<cmd>TermSelect<cr>')
 
-      vim.ui.select = require('fzf-lua.providers.ui_select').ui_select
+      fzf_lua.register_ui_select()
     end,
   },
   {
