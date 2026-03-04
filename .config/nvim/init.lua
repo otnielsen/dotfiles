@@ -86,12 +86,10 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-  callback = function(args)
-    local ft_80 = { 'python', 'sh', 'text' }
-    if vim.list_contains(ft_80, args.match) then
-      local winid = vim.api.nvim_get_current_win()
-      vim.wo[winid][0].colorcolumn = '80'
-    end
+  pattern = { 'python', 'sh', 'text' },
+  callback = function()
+    local winid = vim.api.nvim_get_current_win()
+    vim.wo[winid][0].colorcolumn = '80'
   end,
 })
 
