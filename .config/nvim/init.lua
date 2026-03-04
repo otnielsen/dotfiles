@@ -453,4 +453,13 @@ vim.api.nvim_create_autocmd('LspAttach', {
   end,
 })
 
+vim.api.nvim_create_autocmd('LspDetach', {
+  callback = function(args)
+    vim.api.nvim_clear_autocmds({
+      event = 'BufWritePre',
+      buffer = args.buf,
+    })
+  end,
+})
+
 vim.cmd.colorscheme('cyberdream')
