@@ -431,25 +431,26 @@ local function lsp_on_attach(buf, client)
       group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
       buffer = buf,
       callback = function()
-        local buf_ft = vim.api.nvim_get_option_value('filetype', { buf = buf })
-        if vim.list_contains(client.config.filetypes, buf_ft) then
-          vim.lsp.buf.format({ bufnr = buf, id = client.id })
-          code_actions()
-        end
+        vim.lsp.buf.format({ bufnr = buf, id = client.id })
+        code_actions()
       end,
     })
   end
 end
 
-local orig_handler = vim.lsp.handlers['client/registerCapability']
-vim.lsp.handlers['client/registerCapability'] = function(err, result, ctx)
-  local result = orig_handler(err, result, ctx)
-  local client = vim.lsp.get_client_by_id(ctx.client_id)
-
-  lsp_on_attach(ctx.buf, client)
-
-  return result
-end
+vim.lsp.handlers['client/registerCapability'] = (function(overridden)
+  return function(err, res, ctx)
+    local result = overridden(err, res, ctx)
+    local client = vim.lsp.get_client_by_id(ctx.client_id)
+    if not client then
+      return
+    end
+    for bufnr, _ in pairs(client.attached_buffers) do
+      lsp_on_attach(bufnr, client)
+    end
+    return result
+  end
+end)(vim.lsp.handlers['client/registerCapability'])
 
 vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('my.lsp', {}),
