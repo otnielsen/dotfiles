@@ -294,7 +294,16 @@ vim.lsp.config('biome', {
   end,
   settings = {
     biome = {
-      configurationPath = vim.env.XDG_CONFIG_HOME .. '/biome/biome.json',
+      inlineConfig = {
+        formatter = {
+          indentStyle = 'space',
+        },
+        html = {
+          formatter = {
+            enabled = true,
+          },
+        },
+      },
     },
   },
 })
