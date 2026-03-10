@@ -4,7 +4,6 @@
 
 [diff]
   tool = nvimdiff
-  external = difft
 
 [difftool]
   prompt = false
