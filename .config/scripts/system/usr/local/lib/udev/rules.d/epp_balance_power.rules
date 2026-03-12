@@ -1,0 +1,1 @@
+ACTION=="add", KERNEL=="cpu[0-9]*", SUBSYSTEM=="cpu", DRIVER=="processor", KERNELS=="cpu", ATTR{cpufreq/energy_performance_preference}="balance_power"
