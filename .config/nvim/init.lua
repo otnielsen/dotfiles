@@ -81,7 +81,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'python', 'sh', 'text' },
+  pattern = { 'python', 'sh', 'text', 'markdown', 'typst' },
   callback = function()
     local winid = vim.api.nvim_get_current_win()
     vim.wo[winid][0].colorcolumn = '80'
@@ -351,6 +351,7 @@ vim.lsp.config('ruff', {
 vim.lsp.config('tinymist', {
   init_options = {
     formatterMode = 'typstyle',
+    formatterPrintWidth = 79,
     formatterProseWrap = true,
     lint = {
       enabled = true,
