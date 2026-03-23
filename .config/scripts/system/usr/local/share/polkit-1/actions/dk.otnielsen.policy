@@ -3,7 +3,7 @@
 
 <policyconfig>
   <action id="dk.otnielsen.gamemode-epp">
-    <description>Set epp to balance-performance</description>
+    <description>Set epp for gamemode</description>
     <message>Authentication is required to modify the energy performance preference</message>
     <defaults>
       <allow_any>no</allow_any>
