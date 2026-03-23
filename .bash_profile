@@ -45,5 +45,9 @@ if [ -f "$vk_file" ]; then
 fi
 unset vk_file
 
+# Make uinput virtual xbox 360 controller use dualshock 3 mappings in sdl
+# applications, so square and triangle (x and y) aren't swapped
+export SDL_GAMECONTROLLERCONFIG='0300c5085e0400008e02000011810000,Xbox 360 Controller,a:b0,b:b1,back:b8,dpdown:b14,dpleft:b15,dpright:b16,dpup:b13,guide:b10,leftshoulder:b4,leftstick:b11,lefttrigger:a2,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b12,righttrigger:a5,rightx:a3,righty:a4,start:b9,x:b3,y:b2,platform:Linux,'
+
 # shellcheck source=/dev/null
 [ -f ~/.bashrc ] && source ~/.bashrc
