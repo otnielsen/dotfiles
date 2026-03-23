@@ -1,0 +1,5 @@
+# DualShock 4 disable led
+ACTION=="add", KERNEL=="input[0-9]*:global", SUBSYSTEM=="leds", KERNELS=="*054C:09CC*", SUBSYSTEMS=="hid", DRIVERS=="playstation", ATTR{brightness}="0"
+
+# DualShock 3 use virtual xbox 360 controller
+ACTION=="add", KERNEL=="event[0-9]*", SUBSYSTEM=="input", KERNELS=="input[0-9]*", SUBSYSTEMS=="input", ATTRS{id/product}=="0268", ATTRS{id/vendor}=="054c", ATTRS{name}=="Sony PLAYSTATION(R)3 Controller", TAG+="systemd", ENV{SYSTEMD_WANTS}+="uigamepad@$kernel.service"

@@ -1,0 +1,9 @@
+[Unit]
+Description=Virtual gamepad via uinput
+BindsTo=dev-input-%i.device
+After=dev-input-%i.device
+
+[Service]
+Type=exec
+ExecStart=/usr/local/bin/uigamepad /dev/input/%I
+Restart=on-failure

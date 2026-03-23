@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+
+
+import sys
+from pathlib import Path
+
+import libevdev
+from libevdev import EV_ABS, InputEvent
+
+
+def main(args) -> str | None:
+    devnode = args[1]
+    if not Path(devnode).is_char_device():
+        return f'{devnode}: not a character device'
+
+    presets = {
+        'xbox360': {
+            'name': 'Virtual 360 pad',
+            'id': {
+                'vendor': 0x045E,
+                'product': 0x028E,
+            },
+        },
+    }
+
+    mappings = {
+        'Sony PLAYSTATION(R)3 Controller': 'xbox360',
+    }
+
+    with open(devnode, 'rb') as fd:
+        dev = libevdev.Device(fd)
+        dev.grab()
+
+        dev.disable(libevdev.EV_FF)
+
+        if dev.name in mappings:
+            preset = presets[mappings[dev.name]]
+            dev.name = preset['name']
+            dev.id = preset['id']
+
+        uinput = dev.create_uinput_device()
+        send_events = uinput.send_events
+
+        ABS_Z = EV_ABS.ABS_Z
+        ABS_RZ = EV_ABS.ABS_RZ
+        abs_z_max = InputEvent(ABS_Z, dev.absinfo[ABS_Z].maximum)
+        abs_rz_max = InputEvent(ABS_RZ, dev.absinfo[ABS_RZ].maximum)
+
+        while True:
+            for event in dev.events():
+                if event.type == EV_ABS:
+                    code = event.code
+                    if code == ABS_Z:
+                        if event.value != 0:
+                            event = abs_z_max
+                    elif code == ABS_RZ:
+                        if event.value != 0:
+                            event = abs_rz_max
+
+                send_events([event])
+
+
+if __name__ == '__main__':
+    sys.exit(main(sys.argv))
