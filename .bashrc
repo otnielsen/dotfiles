@@ -61,6 +61,7 @@ alias ls='ls --color=auto --group-directories-first'
 alias tree='tree -alI .git --dirsfirst'
 alias du='du -shD'
 alias which='(alias; declare -f) | which --tty-only --read-alias --read-functions --show-tilde --show-dot'
+alias glow='glow -p'
 
 alias lg='lazygit'
 alias dl='curl -fL --remote-name-all' # dl for download
