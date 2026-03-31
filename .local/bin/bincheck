@@ -3,8 +3,37 @@
 set -eu
 
 exit_status=0
-for bin in $(jq -r .[] ~/.config/scripts/setup/dependencies.json); do
+
+# Check installed binaries
+binaries=$(jq -r '.[]' ~/.config/scripts/setup/binaries.json)
+while read -r bin || [ -n "$bin" ]; do
     command -v "$bin" >/dev/null 2>&1 || { echo "$bin cannot be found in \$PATH" && exit_status=1; }
-done
+done <<EOF
+$binaries
+EOF
+
+# Check fstab entries
+entry_patterns=$(jq -r '.[]' ~/.config/scripts/setup/fstab.json)
+while read -r pattern || [ -n "$pattern" ]; do
+    grep -qE "$pattern" /etc/fstab || { echo 'Entry missing from /etc/fstab' && exit_status=1; }
+done <<EOF
+$entry_patterns
+EOF
+
+# Check enabled systemd user units
+enabled_user_units=$(jq -r '.[]' ~/.config/scripts/setup/systemd-user.json)
+while read -r unit || [ -n "$unit" ]; do
+    systemctl -q --user is-enabled "$unit" || { echo "$unit is not enabled" && exit_status=1; }
+done <<EOF
+$enabled_user_units
+EOF
+
+# Check enabled systemd system units
+enabled_system_units=$(jq -r '.[]' ~/.config/scripts/setup/systemd-system.json)
+while read -r unit || [ -n "$unit" ]; do
+    systemctl -q is-enabled "$unit" || { echo "$unit is not enabled" && exit_status=1; }
+done <<EOF
+$enabled_system_units
+EOF
 
 exit $exit_status
