@@ -14,6 +14,7 @@ user_pref("browser.download.useDownloadDir", false);
 user_pref("browser.eme.ui.enabled", false);
 user_pref("browser.formfill.enable", false);
 user_pref("browser.link.open_newwindow.restriction", 0);
+user_pref("browser.ml.enable", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons", false);
 user_pref("browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features", false);
 user_pref("browser.newtabpage.activity-stream.feeds.telemetry", false);
