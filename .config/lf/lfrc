@@ -36,12 +36,10 @@ map <c-f> ${{
 }}
 
 cmd ln %{{
-    IFS=$(printf '\n\t')
-
     list=$(tail -n +2 ~/.local/share/lf/files)
 
     if [ -n "$list" ]; then
-        for target in $list; do
+        printf '%s' "$list" | while read -r target || [ -n "$target" ]; do
             link=$(basename "$target")
 
             i=0
