@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -eu
+
+if [ -t 0 ]; then
+    menu='fzf'
+    cmd='ssh'
+else
+    menu='fuzzel --dmenu'
+    cmd="$TERMINAL -e ssh"
+fi
+
+menu_options="jellyfin@192.168.1.213
+root@192.168.1.53"
+
+choice=$(printf '%s' "$menu_options" | $menu)
+[ -z "$choice" ] && exit 1
+
+valid_option=0
+while read -r option || [ -n "$option" ]; do
+    if [ "$option" = "$choice" ]; then
+        valid_option=1
+        break
+    fi
+done <<EOF
+$menu_options
+EOF
+
+[ "$valid_option" = 0 ] && exit 1
+
+exec $cmd "$choice"
