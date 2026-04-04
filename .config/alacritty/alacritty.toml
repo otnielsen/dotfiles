@@ -7,6 +7,9 @@ import = [
 decorations = "none"
 startup_mode = "Fullscreen"
 
+[font]
+normal = { family = "JetBrainsMonoNL Nerd Font Mono" }
+
 [keyboard]
 bindings = [
   { key = "F11", action = "ToggleFullscreen" },

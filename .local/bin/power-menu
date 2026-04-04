@@ -1,0 +1,24 @@
+#!/bin/sh
+
+set -eu
+
+if [ -t 0 ]; then
+    menu='fzf'
+else
+    menu='fuzzel --dmenu'
+fi
+
+menu_options="\uf4ee  sleep\0systemctl suspend
+\uf011  poweroff\0systemctl poweroff
+\uf46a  reboot\0systemctl reboot
+\uf456  lock\0loginctl lock-session
+\uf42a  logout\0loginctl terminate-user $USER
+\uec19  firmware\0systemctl reboot --firmware-setup"
+
+choice=$(printf '%b' "$menu_options" | awk -F '\0' 'NF == 2 { print $1 }' | $menu)
+[ -z "$choice" ] && exit 1
+
+cmd=$(printf '%b' "$menu_options" | awk -F '\0' -v choice="$choice" 'NF == 2 && $1 == choice { printf "%s", $2; exit }')
+[ -z "$cmd" ] && exit 1
+
+exec $cmd
