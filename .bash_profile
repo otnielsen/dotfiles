@@ -14,7 +14,7 @@ export BROWSER=firefox
 export PAGER="less -RFM"
 export BAT_PAGER="$PAGER"
 export MANPAGER="bat --strip-ansi=always -plman"
-export FZF_DEFAULT_OPTS='--reverse --list-border --cycle --no-scrollbar --height=~100%'
+export FZF_DEFAULT_OPTS='--reverse --list-border --cycle --no-scrollbar --height=~100% --no-mouse'
 
 export CC=clang
 export CXX=clang++
