@@ -3,22 +3,24 @@
 set -eu
 
 if [ -t 0 ]; then
-    menu='fzf'
+    menu='fzf --read0'
 else
-    menu='fuzzel --dmenu'
+    menu='fuzzel --dmenu0'
 fi
 
-menu_options="\uf4ee  sleep\0systemctl suspend
-\uf011  poweroff\0systemctl poweroff
-\uf46a  reboot\0systemctl reboot
-\uf456  lock\0loginctl lock-session
-\uf42a  logout\0loginctl terminate-user $USER
-\uec19  firmware\0systemctl reboot --firmware-setup"
+menu_options='{
+"\uf4ee  sleep": "systemctl suspend",
+"\uf011  poweroff": "systemctl poweroff",
+"\uf46a  reboot": "systemctl reboot",
+"\uf456  lock": "loginctl lock-session",
+"\uf42a  logout": "loginctl terminate-user '"$USER"'",
+"\uec19  firmware": "systemctl reboot --firmware-setup"
+}'
 
-choice=$(printf '%b' "$menu_options" | awk -F '\0' 'NF == 2 { print $1 }' | $menu)
+choice=$(printf '%s' "$menu_options" | jq --raw-output0 'keys_unsorted[]' | $menu)
 [ -z "$choice" ] && exit 1
 
-cmd=$(printf '%b' "$menu_options" | awk -F '\0' -v choice="$choice" 'NF == 2 && $1 == choice { printf "%s", $2; exit }')
-[ -z "$cmd" ] && exit 1
+cmd=$(printf '%s' "$menu_options" | jq -r --arg choice "$choice" '.[$choice]')
+[ "$cmd" = 'null' ] || [ -z "$cmd" ] && exit 1
 
 exec $cmd

@@ -3,29 +3,23 @@
 set -eu
 
 if [ -t 0 ]; then
-    menu='fzf'
+    export FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --bind \"enter:become(printf '%s' {n})\""
+    menu='fzf --read0'
     cmd='ssh'
 else
-    menu='fuzzel --dmenu'
+    menu='fuzzel --dmenu0 --index'
     cmd="$TERMINAL -e ssh"
 fi
 
-menu_options="jellyfin@192.168.1.213
-root@192.168.1.53"
+menu_options='[
+"jellyfin@192.168.1.213",
+"root@192.168.1.53"
+]'
 
-choice=$(printf '%s' "$menu_options" | $menu)
-[ -z "$choice" ] && exit 1
+choice=$(printf '%s' "$menu_options" | jq --raw-output0 '.[]' | $menu)
+[ -z "$choice" ] || [ "$choice" -lt 0 ] && exit 1
 
-valid_option=0
-while read -r option || [ -n "$option" ]; do
-    if [ "$option" = "$choice" ]; then
-        valid_option=1
-        break
-    fi
-done <<EOF
-$menu_options
-EOF
+host=$(printf '%s' "$menu_options" | jq -r --argjson choice "$choice" '.[$choice]')
+[ "$host" = 'null' ] || [ -z "$host" ] && exit 1
 
-[ "$valid_option" = 0 ] && exit 1
-
-exec $cmd "$choice"
+exec $cmd "$host"
