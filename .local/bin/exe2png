@@ -13,7 +13,7 @@ if [ "$(file -b --mime-type "$fullname")" != application/vnd.microsoft.portable-
     exit 1
 fi
 
-basename=$(basename -s .exe "$fullname")
+basename=$(basename "$fullname" .exe)
 png_name="${basename}.png"
 
 if [ -e "$png_name" ]; then

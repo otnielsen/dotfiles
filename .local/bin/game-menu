@@ -1,0 +1,55 @@
+#!/bin/sh
+
+set -eu
+
+menu='fuzzel --dmenu'
+
+conf_dir=~/.config/game-menu
+
+menu_options=$(cat "$conf_dir/games.json")
+
+titles=$(printf '%s' "$menu_options" | jq -r 'keys[]')
+
+icon_dir="$conf_dir/icons"
+cd "$icon_dir"
+icon_menu=''
+while read -r title || [ -n "$title" ]; do
+    path=$(printf '%s' "$menu_options" | jq -r --arg title "$title" '.[$title]' | sed "s|^~/|$HOME/|")
+
+    [ -f "$path" ] || continue
+
+    basename=$(basename "$path" .exe)
+    [ -f "${basename}.png" ] || exe2png "$path"
+
+    icon_menu="${icon_menu}${title}\0icon\x1f${icon_dir}/${basename}.png\n"
+
+done <<EOF
+$titles
+EOF
+
+choice=$(printf '%b' "$icon_menu" | $menu)
+[ -z "$choice" ] && exit 1
+
+path=$(printf '%s' "$menu_options" | jq -r --arg choice "$choice" '.[$choice]' | sed "s|^~/|$HOME/|")
+
+[ "$path" = 'null' ] || [ -z "$path" ] && exit 1
+
+cd "$(dirname "$path")"
+
+export DXVK_CONFIG_FILE=~/.config/dxvk/dxvk.conf
+export MANGOHUD=1
+export PROTONPATH=GE-Proton
+export PROTON_FSR4_RDNA3_UPGRADE=1
+export PROTON_USE_WOW64=1
+export RADV_TEX_ANISO=16
+export WINE_FULLSCREEN_INTEGER_SCALING=1
+
+basename=$(basename "$path" .exe)
+
+export WINEPREFIX="$conf_dir/prefixes/$basename"
+
+set --
+script_path="$conf_dir/scripts/${basename}.sh"
+[ -f "$script_path" ] && . "$script_path"
+
+exec gamemoderun umu-run "$path" "$@"
