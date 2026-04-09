@@ -23,7 +23,11 @@ fi
 
 ico_file=$(mktemp --suffix=.ico)
 
-icoextract "$fullname" "$ico_file"
+icoextract "$fullname" "$ico_file" 2>/dev/null || {
+    echo "$fullname: file has no resources" >&2
+    rm -f "$ico_file"
+    exit 1
+}
 largest=$(identify "$ico_file" | sort -rnk 3 | awk '{ print $1; exit }')
 magick "$largest" "$png_name"
 
