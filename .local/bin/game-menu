@@ -3,11 +3,8 @@
 set -eu
 
 menu='fuzzel --dmenu'
-
 conf_dir=~/.config/game-menu
-
 menu_options=$(cat "$conf_dir/games.json")
-
 titles=$(printf '%s' "$menu_options" | jq -r 'keys[]')
 
 icon_dir="$conf_dir/icons"
@@ -19,7 +16,7 @@ while read -r title || [ -n "$title" ]; do
     [ -f "$path" ] || continue
 
     basename=$(basename "$path" .exe)
-    [ -f "${basename}.png" ] || exe2png "$path"
+    [ -f "${basename}.png" ] || exe2png "$path" || basename=
 
     icon_menu="${icon_menu}${title}\0icon\x1f${icon_dir}/${basename}.png\n"
 
@@ -32,7 +29,12 @@ choice=$(printf '%b' "$icon_menu" | $menu)
 
 path=$(printf '%s' "$menu_options" | jq -r --arg choice "$choice" '.[$choice]' | sed "s|^~/|$HOME/|")
 
-[ "$path" = 'null' ] || [ -z "$path" ] && exit 1
+if [ "$path" = 'null' ] || [ -z "$path" ]; then
+    exit 1
+elif [ "$(file -b --mime-type "$path")" != application/vnd.microsoft.portable-executable ]; then
+    echo "$path: not a windows executable" >&2
+    exit 1
+fi
 
 cd "$(dirname "$path")"
 
