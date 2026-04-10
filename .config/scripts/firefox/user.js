@@ -62,6 +62,8 @@ user_pref("htmlaboutaddons.recommendations.enabled", false);
 user_pref("identity.fxaccounts.enabled", false);
 user_pref("media.autoplay.default", 0);
 user_pref("media.videocontrols.picture-in-picture.video-toggle.enabled", false);
+user_pref("network.trr.mode", 3);
+user_pref("network.trr.uri", "https://dns.quad9.net/dns-query");
 user_pref("permissions.default.camera", 2);
 user_pref("permissions.default.desktop-notification", 2);
 user_pref("permissions.default.geo", 2);
