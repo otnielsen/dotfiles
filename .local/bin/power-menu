@@ -5,7 +5,7 @@ set -eu
 if [ -t 0 ]; then
     menu='fzf --read0'
 else
-    menu='fuzzel --dmenu0'
+    menu='fuzzel --dmenu0 --only-match'
 fi
 
 menu_options='{

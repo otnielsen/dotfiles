@@ -2,7 +2,7 @@
 
 set -eu
 
-menu='fuzzel --dmenu'
+menu='fuzzel --dmenu --only-match'
 conf_dir=~/.config/game-menu
 menu_options=$(cat "$conf_dir/games.json")
 titles=$(printf '%s' "$menu_options" | jq -r 'keys[]')

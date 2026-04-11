@@ -7,7 +7,7 @@ if [ -t 0 ]; then
     menu='fzf --read0'
     cmd='ssh'
 else
-    menu='fuzzel --dmenu0 --index'
+    menu='fuzzel --dmenu0 --only-match --index'
     cmd="$TERMINAL -e ssh"
 fi
 
