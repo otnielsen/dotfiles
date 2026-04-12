@@ -13,7 +13,13 @@ icon_menu=''
 while read -r title || [ -n "$title" ]; do
     path=$(printf '%s' "$menu_options" | jq -r --arg title "$title" '.[$title]' | sed "s|^~/|$HOME/|")
 
-    [ -f "$path" ] || continue
+    if [ "${path#/}" = "$path" ]; then
+        echo "$path: must be an absolute path"
+        continue
+    elif [ ! -f "$path" ]; then
+        echo "$path: no such file"
+        continue
+    fi
 
     basename=$(basename "$path" .exe)
     [ -f "${basename}.png" ] || exe2png "$path" || basename=
