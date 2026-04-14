@@ -186,6 +186,7 @@ require('lazy').setup({
       fzf_lua.setup({
         'border-fused',
         files = { hidden = false, actions = { ['enter'] = fzf_lua.actions.file_edit } },
+        grep = { hidden = true, follow = true },
       })
 
       vim.keymap.set('n', '<leader>ff', fzf_lua.files)
