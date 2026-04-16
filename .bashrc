@@ -43,7 +43,7 @@ PS1='\[\e[36m\]\u@\h \w$(git_show_head)\n\[\e]133;A\a${_COLOR}\]$\[\e[0m\] '
 
 [ -z "$BASH_COMPLETION_VERSINFO" ] && [ -f /usr/share/bash-completion/bash_completion ] && source /usr/share/bash-completion/bash_completion
 
-HISTFILE=$XDG_STATE_HOME/bash_history
+HISTFILE=$XDG_STATE_HOME/bash/history
 
 alias mvn='mvn -gs $XDG_CONFIG_HOME/maven/settings.xml'
 alias gearlever='flatpak run it.mijorus.gearlever'
