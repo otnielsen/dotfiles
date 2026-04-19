@@ -7,7 +7,7 @@ if [ -z "$TMUX" ]; then
     0) ;;
     1) exec tmux attach -t "${tmux_unattached_sessions[0]}" ;;
     *)
-        res=$(printf '%s\n' "${tmux_unattached_sessions[@]}" | fzf --preview="tmux capture-pane -peJt '{r}:' -S \"#{e|-:#{pane_bottom},\$(( \$FZF_PREVIEW_LINES - 1 ))}\"")
+        res=$(printf '%s\n' "${tmux_unattached_sessions[@]}" | fzf --preview="tmux capture-pane -peJt '{r}:' -S \"#{e|-:#{pane_bottom},\$(( \$FZF_PREVIEW_LINES - 1 ))}\"" --list-border)
         if [ -n "$res" ]; then
             exec tmux attach -t "$res"
         fi
