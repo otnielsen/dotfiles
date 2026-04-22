@@ -3,7 +3,7 @@
   email = oliver.thor.nielsen100@gmail.com
 
 [diff]
-  tool = nvimdiff
+  external = difft
 
 [difftool]
   prompt = false
