@@ -16,14 +16,17 @@ $binaries
 EOF
 
 # Check fstab entries
-entry_patterns=$(jq -r '.[]' ~/.config/scripts/setup/fstab.json)
-while read -r pattern || [ -n "$pattern" ]; do
+fstab_entries=$(cat ~/.config/scripts/setup/fstab.json)
+entry_devices=$(printf '%s' "$fstab_entries" | jq -r 'keys[]')
+while read -r device || [ -n "$device" ]; do
+    pattern=$(printf '%s' "$fstab_entries" | jq -r --arg device "$device" '.[$device]')
+
     grep -qE "$pattern" /etc/fstab || {
-        echo 'Entry missing from /etc/fstab' >&2
+        echo "$device entry missing from /etc/fstab" >&2
         exit_status=1
     }
 done <<EOF
-$entry_patterns
+$entry_devices
 EOF
 
 # Check enabled systemd user units

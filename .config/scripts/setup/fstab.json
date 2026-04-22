@@ -1,4 +1,4 @@
-[
-  "UUID=[a-fA-F0-9-]*\\s*/media/gamedisk\\s*ext4\\s*defaults\\s*0\\s*0",
-  "jellyfin@192.168.1.213:\\s*/media/nas\\s*sshfs\\s*allow_other,default_permissions,_netdev,reconnect,x-systemd.automount,IdentityFile=/home/olive/.ssh/id_ed25519\\s*0\\s*0"
-]
+{
+  "gamedisk": "UUID=[a-fA-F0-9-]*\\s*/media/gamedisk\\s*ext4\\s*defaults\\s*0\\s*0",
+  "nas": "jellyfin@192.168.1.213:\\s*/media/nas\\s*sshfs\\s*allow_other,default_permissions,_netdev,reconnect,x-systemd.automount,IdentityFile=/home/olive/.ssh/id_ed25519\\s*0\\s*0"
+}
