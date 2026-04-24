@@ -10,7 +10,6 @@ startup_mode = "Fullscreen"
 [keyboard]
 bindings = [
   { key = "F11", action = "ToggleFullscreen" },
-  { key = "Return", mods = "Control|Shift", action = "SpawnNewInstance" },  # https://wiki.archlinux.org/title/Alacritty#Spawn_new_instance_in_same_directory
 ]
 
 [mouse]
