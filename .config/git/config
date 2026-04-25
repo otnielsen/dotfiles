@@ -4,6 +4,7 @@
 
 [diff]
   external = difft
+  tool = meld
 
 [difftool]
   prompt = false
