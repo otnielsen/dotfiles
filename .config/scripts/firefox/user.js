@@ -56,6 +56,7 @@ user_pref("extensions.formautofill.creditCards.enabled", false);
 user_pref("extensions.htmlaboutaddons.recommendations.enabled", false);
 user_pref("extensions.postDownloadThirdPartyPrompt", false);
 user_pref("extensions.quarantinedDomains.enabled", false);
+user_pref("font.name.monospace.x-western", "JetBrainsMono Nerd Font Mono");
 user_pref("full-screen-api.warning.timeout", 0);
 user_pref("geo.provider.use_geoclue", false);
 user_pref("htmlaboutaddons.recommendations.enabled", false);
