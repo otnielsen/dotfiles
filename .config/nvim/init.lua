@@ -381,33 +381,6 @@ vim.lsp.config('tinymist', {
   },
 })
 
--- local lua_default_markers = vim.lsp.config.lua_ls.root_markers
--- vim.lsp.config('lua_ls', {
---   settings = {
---     Lua = {
---       runtime = {
---         version = 'LuaJIT',
---         path = { 'lua/?.lua', 'lua/?/init.lua' },
---       },
---       workspace = {
---         library = { vim.env.VIMRUNTIME },
---       },
---       format = {
---         enable = false,
---       },
---     },
---   },
---   workspace_required = true,
---   root_dir = function(bufnr, on_dir)
---     local lua_custom_markers = vim.list_extend(lua_default_markers, { 'lua' })
---     on_dir(
---       vim.fs.root(bufnr, lua_custom_markers)
---         or workspace_root
---         or vim.fn.fnamemodify(vim.api.nvim_buf_get_name(bufnr), ':p:h')
---     )
---   end,
--- })
-
 vim.lsp.config('stylua', {
   cmd = { 'stylua', '--lsp', '--config-path', vim.env.XDG_CONFIG_HOME .. '/stylua/stylua.toml' },
 })
