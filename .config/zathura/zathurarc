@@ -4,3 +4,7 @@ set recolor-reverse-video
 set guioptions ""
 set render-loading false
 set selection-clipboard clipboard
+
+map d scroll half-down
+map u scroll half-up
+map U toggle_page_mode
