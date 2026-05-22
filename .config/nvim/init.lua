@@ -1,11 +1,4 @@
-local workspace_root = nil
-local git_dir = vim.system({ 'git', '-C', vim.fn.expand('%:p:h'), 'rev-parse', '--show-toplevel' }):wait()
-if git_dir.code == 0 then
-  workspace_root = vim.trim(git_dir.stdout)
-else
-  workspace_root = vim.fs.root(0, { '.venv', 'package.json', 'pom.xml', 'biome.json' })
-end
-
+local workspace_root = vim.fs.root(0, { '.git', { '.venv', 'package.json', 'pom.xml', 'biome.json' } })
 if workspace_root then
   vim.fn.chdir(workspace_root)
 end
@@ -192,7 +185,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>ff', fzf_lua.files)
       vim.keymap.set('n', '<leader>fl', fzf_lua.grep)
       vim.keymap.set('n', '<leader>fg', function()
-        if git_dir.code == 0 then
+        if vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1 then
           fzf_lua.git_files()
         else
           print('Not in a git repository')
@@ -224,7 +217,7 @@ require('lazy').setup({
 
       local lazygit = Terminal:new({ cmd = 'lazygit' })
       vim.keymap.set('n', '<leader>g', function()
-        if git_dir.code == 0 then
+        if vim.fn.isdirectory(vim.fn.getcwd() .. '/.git') == 1 then
           lazygit:toggle()
         else
           print('Not in a git repository')
