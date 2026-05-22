@@ -304,6 +304,20 @@ vim.lsp.config('biome', {
       },
     },
   },
+  before_init = function(_, config)
+    for dir in vim.fs.parents(vim.api.nvim_buf_get_name(0)) do
+      local config_file = dir .. '/biome.json'
+      local stat = vim.uv.fs_stat(config_file)
+      if stat and stat.type == 'file' then
+        local file_config = vim.fn.json_decode(vim.fn.readfile(config_file))
+        config.settings.biome = vim.tbl_deep_extend('force', config.settings.biome, { inlineConfig = file_config })
+        break
+      end
+      if dir == workspace_root then
+        break
+      end
+    end
+  end,
 })
 
 vim.lsp.config('cssls', {
