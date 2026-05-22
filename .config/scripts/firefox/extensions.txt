@@ -3,5 +3,6 @@
 · Dark Reader
 · I still don't care about cookies
 · Proton VPN
-· SponsorBlock for YouTube
+· SponsorBlock
+· Vimium
 · uBlock Origin

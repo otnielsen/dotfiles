@@ -1,0 +1,9 @@
+{
+  "exclusionRules": [
+    {
+      "passKeys": "fjkl",
+      "pattern": "https?://www\\.youtube\\.com/watch/?\\?v=*"
+    }
+  ],
+  "regexFindMode": true
+}
