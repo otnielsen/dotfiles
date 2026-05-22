@@ -68,11 +68,7 @@ alias dl='curl -fL --remote-name-all' # dl for download
 
 lfcd() {
     # `command` is needed in case `lfcd` is aliased to `lf`
-    cd "$(
-        export PAGER='less -RM'
-        export BAT_PAGER="$PAGER"
-        command lf -print-last-dir "$@"
-    )" || return
+    cd "$(command lf -print-last-dir "$@")" || return
 }
 
 alias lf='lfcd'

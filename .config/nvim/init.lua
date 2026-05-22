@@ -231,8 +231,7 @@ require('lazy').setup({
         end
       end)
 
-      local lf_pager = 'less -RM'
-      local lf = Terminal:new({ cmd = 'lf', env = { PAGER = lf_pager, BAT_PAGER = lf_pager } })
+      local lf = Terminal:new({ cmd = 'lf' })
       vim.keymap.set('n', '<leader>e', function()
         lf:toggle()
       end)

@@ -11,7 +11,8 @@ export EDITOR=nvim
 export VISUAL=$EDITOR
 export TERMINAL=alacritty
 export BROWSER=firefox
-export PAGER="less -RFM"
+export LESS='-RFM'
+export PAGER="less"
 export BAT_PAGER="$PAGER"
 export MANPAGER="bat --strip-ansi=always -plman"
 export FZF_DEFAULT_OPTS='--tmux --reverse --cycle --no-scrollbar --no-mouse'
