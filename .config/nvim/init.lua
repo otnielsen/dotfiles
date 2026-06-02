@@ -1,6 +1,8 @@
 local workspace_root = vim.fs.root(0, { '.git', { '.venv', 'package.json', 'pom.xml', 'biome.json' } })
 if workspace_root then
   vim.fn.chdir(workspace_root)
+else
+  vim.fn.chdir(vim.fn.expand('%:p:h'))
 end
 
 vim.env.EDITOR = 'nvr -l --servername ' .. vim.v.servername
