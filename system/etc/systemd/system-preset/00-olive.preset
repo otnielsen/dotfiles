@@ -1,1 +1,2 @@
+enable nix-daemon.service
 enable scx_loader.service
