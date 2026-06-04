@@ -4,9 +4,15 @@
   home.packages = with pkgs; [
     ffmpeg-headless.lib
     home-manager
+    lazygit
+    lf
     mesa
     mesa-demos
+    mpv
+    tmux
+    typst
     vulkan-tools
+    yt-dlp
   ];
 
   nixpkgs.config.allowUnfree = true;
