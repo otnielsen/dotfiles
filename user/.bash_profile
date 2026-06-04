@@ -32,20 +32,14 @@ export SQLITE_HISTORY=$XDG_STATE_HOME/sqlite_history
 export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 export INPUTRC=$XDG_CONFIG_HOME/readline/inputrc
 
-vk_file='/usr/local/share/vulkan/icd.d/radeon_icd.x86_64.json'
-if [ -f "$vk_file" ]; then
-    export AMD_DEBUG=useaco # remove this line when mesa 26.0 is available as that will use aco for radeonsi by default
-
-    export VK_DRIVER_FILES="$vk_file:/usr/share/vulkan/icd.d/radeon_icd.i686.json"
-
-    if ! [[ "$LD_LIBRARY_PATH" =~ /usr/local/lib64 ]]; then
-        export LD_LIBRARY_PATH="/usr/local/lib64${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-    fi
-
-    export LIBVA_DRIVERS_PATH=/usr/local/lib64/dri
-    export LIBVA_DRIVER_NAME=radeonsi
+if [ -d ~/.local/state/nix/profile/lib ]; then
+    export LD_LIBRARY_PATH=~/.local/state/nix/profile/lib
+    export LIBVA_DRIVERS_PATH=$LD_LIBRARY_PATH/dri
 fi
-unset vk_file
+
+if [ -d ~/.local/state/nix/profile/share/vulkan/icd.d ]; then
+    export VK_DRIVER_FILES=~/.local/state/nix/profile/share/vulkan/icd.d
+fi
 
 # Make uinput virtual xbox 360 controller use dualshock 3 mappings in sdl
 # applications, so square and triangle (x and y) aren't swapped

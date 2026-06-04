@@ -2,7 +2,11 @@
 
 {
   home.packages = with pkgs; [
+    ffmpeg-headless.lib
     home-manager
+    mesa
+    mesa-demos
+    vulkan-tools
   ];
 
   nixpkgs.config.allowUnfree = true;
