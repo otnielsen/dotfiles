@@ -83,6 +83,15 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = { 'gitcommit' },
+  callback = function()
+    local winid = vim.api.nvim_get_current_win()
+    vim.wo[winid][0].colorcolumn = '51,73'
+    vim.bo.textwidth = 72
+  end,
+})
+
 vim.opt.runtimepath:prepend(vim.fn.stdpath('data') .. '/lazy/lazy.nvim')
 
 require('lazy').setup({
