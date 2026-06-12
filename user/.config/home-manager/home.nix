@@ -9,6 +9,8 @@
     mesa
     mesa-demos
     mpv
+    nerd-fonts.fira-code
+    noto-fonts-color-emoji
     tmux
     typst
     vulkan-tools
