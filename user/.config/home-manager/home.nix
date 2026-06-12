@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   home.packages = with pkgs; [
@@ -14,6 +14,11 @@
     vulkan-tools
     yt-dlp
   ];
+
+  home.activation.myCopyToSystemAction = lib.hm.dag.entryAfter ["installPackages"] ''
+    run /usr/bin/pkexec /usr/local/bin/nix-system-files.py ${config.home.username}
+    run ${pkgs.stow}/bin/stow $VERBOSE_ARG --restow --no-folding --dir=${config.home.homeDirectory}/dotfiles user
+  '';
 
   nixpkgs.config.allowUnfree = true;
 

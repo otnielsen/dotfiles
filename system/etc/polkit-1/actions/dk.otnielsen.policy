@@ -12,4 +12,15 @@
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/local/libexec/gamemode-epp.sh</annotate>
   </action>
+
+  <action id="dk.otnielsen.nix-system-files">
+    <description>Copy system files from nix profile to system paths</description>
+    <message>Authentication is required to modify system paths</message>
+    <defaults>
+      <allow_any>no</allow_any>
+      <allow_inactive>no</allow_inactive>
+      <allow_active>no</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/local/bin/nix-system-files.py</annotate>
+  </action>
 </policyconfig>
