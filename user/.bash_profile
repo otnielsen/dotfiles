@@ -33,7 +33,7 @@ export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
 export INPUTRC=$XDG_CONFIG_HOME/readline/inputrc
 
 if [ -d ~/.local/state/nix/profile/lib ]; then
-    export LD_LIBRARY_PATH=~/.local/state/nix/profile/lib
+    export LD_LIBRARY_PATH=~/.local/state/nix/profile/lib"${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
     export LIBVA_DRIVERS_PATH=$LD_LIBRARY_PATH/dri
 fi
 
