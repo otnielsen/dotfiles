@@ -1,3 +1,0 @@
-export CFLAGS='-march=native -mtune=native -O3 -DNDEBUG'
-export CXXFLAGS="$CFLAGS"
-export LDFLAGS="-fuse-ld=mold -s -Wl,--as-needed"
