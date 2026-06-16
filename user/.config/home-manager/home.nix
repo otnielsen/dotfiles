@@ -15,6 +15,33 @@
     typst
     vulkan-tools
     yt-dlp
+
+    ((ly.override { x11Support = false; }).overrideAttrs (prev: {
+      zigBuildFlags = [
+        "installexe"
+        "-Dprefix_directory="
+        "-Doptimize=ReleaseSafe"
+        "-Dcpu=haswell"
+      ]
+      ++ prev.zigBuildFlags;
+
+      preBuild = ''
+        appendToVar zigBuildFlags "-Ddest_directory=$out"
+      '';
+
+      postInstall = ''
+        substituteInPlace "$out/lib/systemd/system/ly@.service" \
+            --replace-fail /bin/ly "$out/bin/ly"
+      '';
+
+      postFixup = ''
+        _prev_rpath=$(patchelf --print-rpath "$out/bin/ly")
+        patchelf --force-rpath --set-rpath "/usr/lib64''${_prev_rpath:+:$_prev_rpath}" "$out/bin/ly"
+        unset _prev_rpath
+      '';
+
+      dontSetZigDefaultFlags = true;
+    }))
   ];
 
   home.activation.myCopyToSystemAction = lib.hm.dag.entryAfter ["installPackages"] ''
