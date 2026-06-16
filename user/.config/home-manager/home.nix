@@ -17,17 +17,13 @@
     yt-dlp
 
     ((ly.override { x11Support = false; }).overrideAttrs (prev: {
-      zigBuildFlags = [
+      zigBuildFlags = prev.zigBuildFlags ++ [
         "installexe"
+        "-Ddest_directory=${placeholder "out"}"
         "-Dprefix_directory="
         "-Doptimize=ReleaseSafe"
         "-Dcpu=haswell"
-      ]
-      ++ prev.zigBuildFlags;
-
-      preBuild = ''
-        appendToVar zigBuildFlags "-Ddest_directory=$out"
-      '';
+      ];
 
       postInstall = ''
         substituteInPlace "$out/lib/systemd/system/ly@.service" \
