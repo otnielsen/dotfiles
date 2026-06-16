@@ -1,2 +1,0 @@
-dbus-glib-devel
-libusb1-devel
