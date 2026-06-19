@@ -20,14 +20,16 @@
       zigBuildFlags = prev.zigBuildFlags ++ [
         "installexe"
         "-Ddest_directory=${placeholder "out"}"
-        "-Dprefix_directory="
         "-Doptimize=ReleaseSafe"
         "-Dcpu=haswell"
       ];
 
       postInstall = ''
+        mv "$out/usr"/* "$out"
+        rmdir "$out/usr"
+
         substituteInPlace "$out/lib/systemd/system/ly@.service" \
-            --replace-fail /bin/ly "$out/bin/ly"
+            --replace-fail /usr/bin/ly "$out/bin/ly"
       '';
 
       postFixup = ''
@@ -36,6 +38,7 @@
         unset _prev_rpath
       '';
 
+      dontUseZigInstall = true;
       dontSetZigDefaultFlags = true;
     }))
   ];
