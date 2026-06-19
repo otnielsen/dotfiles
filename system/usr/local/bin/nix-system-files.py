@@ -72,6 +72,27 @@ def symlink_program_files(dir: str | Path):
                 file.unlink()
 
 
+def install_services():
+    copy_dir = Path('/opt/home-manager-services')
+    copy_dir.mkdir(parents=True, exist_ok=True)
+    for service in copy_dir.glob('*.service'):
+        service.unlink()
+
+    link_dir = Path('/usr/local/lib/systemd/system')
+    link_dir.mkdir(parents=True, exist_ok=True)
+    for service in link_dir.glob('*.service'):
+        if not service.exists(follow_symlinks=True):
+            service.unlink()
+
+    for service in (home_path / 'lib/systemd/system').glob('*.service'):
+        service_copy = service.copy_into(
+            copy_dir, follow_symlinks=True, preserve_metadata=True
+        )
+        service_link = link_dir / service.name
+        service_link.unlink(missing_ok=True)
+        service_link.symlink_to(service_copy)
+
+
 def symlink_etc_files(dir: str | Path):
     target_dir = profile_link / 'etc' / dir
     for root, _, files in target_dir.walk(
@@ -108,6 +129,8 @@ symlink_program_files('lib/sysusers.d')
 symlink_program_files('lib/tmpfiles.d')
 symlink_program_files('share/polkit-1/actions')
 symlink_program_files('share/polkit-1/rules.d')
+
+install_services()
 
 symlink_etc_files('ly')
 symlink_etc_files('pam.d')
