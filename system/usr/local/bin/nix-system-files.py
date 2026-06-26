@@ -1,136 +1,208 @@
 #!/usr/bin/env python3
 
+import argparse
+import hashlib
+import json
 import os
 import pwd
+import re
+import shutil
 import sys
 from pathlib import Path
 
 if os.geteuid() != 0:
     sys.exit('Must be run as root.')
 
+parser = argparse.ArgumentParser()
+parser.add_argument('user')
+parser.add_argument('store_path', type=Path, metavar='store-path', nargs='?')
+parser.add_argument(
+    '-f', '--force', help='force install nix store files', action='store_true'
+)
+args = parser.parse_args()
+
+USER = args.user
+STORE_PATH: Path | None = args.store_path
+
+USR_LOCAL = Path('/usr/local')
+ETC = Path('/etc')
+
 try:
-    home_dir = pwd.getpwnam(sys.argv[1]).pw_dir
+    home_dir = pwd.getpwnam(USER).pw_dir
 except KeyError:
-    sys.exit(f"User '{sys.argv[1]}' doesn't exist on the system.")
-except IndexError:
-    sys.exit('A user name must be passed as the first argument.')
+    sys.exit(f"User '{USER}' doesn't exist on the system.")
 
 
-system_config = Path(f'{home_dir}/dotfiles/system')
-
-home_path = Path(
-    f'{home_dir}/.local/state/nix/profiles/home-manager/home-path'
-).resolve(strict=True)
-profile_link = Path('/nix/var/nix/profiles/home-manager-path')
-profile_link.unlink(missing_ok=True)
-profile_link.symlink_to(home_path)
-
-
-def copy_system_config(dir: str | Path):
-    dir = system_config / dir
+def copy_system_config(dir: Path):
     for root, _, files in dir.walk(top_down=True, follow_symlinks=False):
         for name in files:
-            source = root / name
-            dest = Path('/') / source.relative_to(system_config, walk_up=False)
+            src = root / name
+            dest = Path('/') / src.relative_to(dir, walk_up=False)
 
             try:
-                if source.lstat().st_mtime > dest.lstat().st_mtime:
+                if src.lstat().st_mtime > dest.lstat().st_mtime:
                     dest.unlink()
-                    source.copy(
+                    src.copy(
                         dest, follow_symlinks=False, preserve_metadata=True
                     )
             except FileNotFoundError:
                 dest.parent.mkdir(parents=True, exist_ok=True)
-                source.copy(
-                    dest, follow_symlinks=False, preserve_metadata=True
-                )
+                src.copy(dest, follow_symlinks=False, preserve_metadata=True)
 
 
-def symlink_program_files(dir: str | Path):
-    target_dir = profile_link / dir
-    for root, _, files in target_dir.walk(
-        top_down=True, follow_symlinks=False
-    ):
-        link_dir = Path('/usr/local') / root.relative_to(
-            profile_link, walk_up=False
-        )
-        link_dir.mkdir(parents=True, exist_ok=True)
+def install_program_files(new_env: Path, old_manifest: dict):
+    new_manifest = {}
 
-        for name in files:
-            target = root / name
-            link = link_dir / name
-            link.unlink(missing_ok=True)
-            link.symlink_to(target)
+    for root, dirs, files in new_env.walk(top_down=True, follow_symlinks=True):
+        if root.full_match(new_env):
+            for dir in (
+                'bin',
+                'sbin',
+            ):
+                try:
+                    dirs.remove(dir)
+                except ValueError:
+                    pass
 
-    link_dir = Path('/usr/local') / target_dir.relative_to(
-        profile_link, walk_up=False
-    )
-    for root, _, files in link_dir.walk(top_down=True, follow_symlinks=False):
-        for name in files:
-            file = root / name
-            if not file.exists(follow_symlinks=True):
-                file.unlink()
+        elif root.full_match(f'{new_env}/share'):
+            for dir in (
+                'applications',
+                'bash-completion',
+                'dbus-1',
+                'fonts',
+                'gamemode',
+                'icons',
+                'locale',
+                'man',
+                'systemd',
+            ):
+                try:
+                    dirs.remove(dir)
+                except ValueError:
+                    pass
 
+        elif root.full_match(f'{new_env}/etc/**'):
+            rel_dir = root.relative_to(new_env / 'etc', walk_up=False)
+            link_dir = ETC / rel_dir
+            link_dir.mkdir(parents=True, exist_ok=True)
 
-def install_services():
-    copy_dir = Path('/opt/home-manager-services')
-    copy_dir.mkdir(parents=True, exist_ok=True)
-    for service in copy_dir.glob('*.service'):
-        service.unlink()
+            for name in files:
+                target = root / name
+                link = link_dir / name
 
-    link_dir = Path('/usr/local/lib/systemd/system')
-    link_dir.mkdir(parents=True, exist_ok=True)
-    for service in link_dir.glob('*.service'):
-        if not service.exists(follow_symlinks=True):
-            service.unlink()
+                if (not link.exists(follow_symlinks=True)) or (
+                    link.is_symlink()
+                    and str(link) in old_manifest
+                    and str(link.readlink()) == old_manifest[str(link)]
+                ):
+                    link.unlink(missing_ok=True)
+                    link.symlink_to(target)
+                    new_manifest[str(link)] = str(target)
+                else:
+                    print(f'Not overwriting admin configuration at {link}')
 
-    for service in (home_path / 'lib/systemd/system').glob('*.service'):
-        service_copy = service.copy_into(
-            copy_dir, follow_symlinks=True, preserve_metadata=True
-        )
-        service_link = link_dir / service.name
-        service_link.unlink(missing_ok=True)
-        service_link.symlink_to(service_copy)
+        elif root.full_match(f'{new_env}/lib/systemd/**'):
+            dest_dir = (
+                USR_LOCAL
+                / 'lib/systemd'
+                / root.relative_to(new_env / 'lib/systemd', walk_up=False)
+            )
+            dest_dir.mkdir(parents=True, exist_ok=True)
 
+            for name in files:
+                src = root / name
+                dest = dest_dir / name
 
-def symlink_etc_files(dir: str | Path):
-    target_dir = profile_link / 'etc' / dir
-    for root, _, files in target_dir.walk(
-        top_down=True, follow_symlinks=False
-    ):
-        link_dir = Path('/etc') / root.relative_to(
-            profile_link / 'etc', walk_up=False
-        )
-        link_dir.mkdir(parents=True, exist_ok=True)
+                with src.open('rb') as f:
+                    src_digest = hashlib.file_digest(f, 'sha256')
+                src_hash = src_digest.hexdigest()
 
-        for name in files:
-            target = root / name
-            link = link_dir / name
+                try:
+                    with dest.open('rb') as f:
+                        dest_digest = hashlib.file_digest(f, 'sha256')
+                    dest_hash = dest_digest.hexdigest()
+                except FileNotFoundError:
+                    dest_hash = None
+                except IsADirectoryError:
+                    if dest.is_symlink():
+                        dest.unlink()
+                    else:
+                        shutil.rmtree(dest)
+                    dest_hash = None
 
-            try:
+                if src_hash != dest_hash:
+                    src.copy(
+                        dest, follow_symlinks=True, preserve_metadata=True
+                    )
+
+                new_manifest[str(dest)] = str(src)
+
+        else:
+            link_dir = USR_LOCAL / root.relative_to(new_env, walk_up=False)
+            link_dir.mkdir(parents=True, exist_ok=True)
+
+            for name in files:
+                target = root / name
+                link = link_dir / name
+                link.unlink(missing_ok=True)
                 link.symlink_to(target)
-            except FileExistsError:
-                pass
+                new_manifest[str(link)] = str(target)
 
-    link_dir = Path('/etc') / target_dir.relative_to(
-        profile_link / 'etc', walk_up=False
-    )
-    for root, _, files in link_dir.walk(top_down=True, follow_symlinks=False):
-        for name in files:
-            file = root / name
-            if not file.exists(follow_symlinks=True):
-                file.unlink()
+    old_files = old_manifest.keys() - new_manifest.keys()
+    for file in old_files:
+        path = Path(file)
+
+        if path.full_match('/etc/**') and not (
+            path.is_symlink() and str(path.readlink()) == old_manifest[file]
+        ):
+            continue
+
+        path.unlink(missing_ok=True)
+
+    return new_manifest
 
 
-copy_system_config('etc')
-copy_system_config('usr/local')
+system_config = Path(f'{home_dir}/dotfiles/system')
+copy_system_config(system_config)
 
-symlink_program_files('lib/sysusers.d')
-symlink_program_files('lib/tmpfiles.d')
-symlink_program_files('share/polkit-1/actions')
-symlink_program_files('share/polkit-1/rules.d')
 
-install_services()
+# https://nix.dev/manual/nix/latest/protocols/nix32.html
+store_pattern = re.compile(r'/nix/store/[0-9a-df-np-sv-z]{32}-system-pkgs')
 
-symlink_etc_files('ly')
-symlink_etc_files('pam.d')
+if (
+    STORE_PATH
+    and store_pattern.fullmatch(str(STORE_PATH))
+    and STORE_PATH.is_dir()
+):
+    store_link = Path(f'/opt/hm-system-pkgs/{USER}/system-pkgs')
+    try:
+        old_env = store_link.readlink()
+    except OSError:
+        old_env = None
+
+    if STORE_PATH != old_env or args.force:
+        manifest_file = Path(
+            f'/opt/hm-system-pkgs/{USER}/install_manifest.json'
+        )
+
+        try:
+            with manifest_file.open() as f:
+                manifest = json.load(f)
+
+        except FileNotFoundError:
+            manifest = {}
+
+        installed_files = install_program_files(STORE_PATH, manifest)
+
+        manifest_file.parent.mkdir(parents=True, exist_ok=True)
+        with manifest_file.open('w') as f:
+            json.dump(installed_files, f, indent=2)
+
+        store_link.unlink(missing_ok=True)
+        store_link.symlink_to(STORE_PATH)
+
+    else:
+        print('system-pkgs environment is unchanged.')
+
+else:
+    print('Not installing nix store files.')

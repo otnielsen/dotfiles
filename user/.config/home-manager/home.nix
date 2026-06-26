@@ -16,11 +16,12 @@
     vulkan-tools
     yt-dlp
 
-    (callPackage ./pkgs/ly.nix { })
+    (callPackage ./pkgs/system_pkgs.nix { })
   ];
 
   home.activation.myCopyToSystemAction = lib.hm.dag.entryAfter ["installPackages"] ''
-    run /usr/bin/pkexec /usr/local/bin/nix-system-files.py ${config.home.username}
+    run /usr/bin/pkexec /usr/local/bin/nix-system-files.py ${config.home.username} \
+                                                           ${pkgs.callPackage ./pkgs/system_pkgs.nix { }}
     run ${pkgs.stow}/bin/stow $VERBOSE_ARG --restow --no-folding --dir=${config.home.homeDirectory}/dotfiles user
   '';
 
