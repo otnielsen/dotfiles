@@ -6,6 +6,7 @@
     home-manager
     lazygit
     lf
+    mangohud
     mesa
     mesa-demos
     mpv
@@ -13,6 +14,7 @@
     noto-fonts-color-emoji
     tmux
     typst
+    umu-launcher
     vulkan-tools
     yt-dlp
 

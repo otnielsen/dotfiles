@@ -68,7 +68,6 @@ def install_program_files(new_env: Path, old_manifest: dict):
             for dir in (
                 'applications',
                 'bash-completion',
-                'dbus-1',
                 'fonts',
                 'gamemode',
                 'icons',
