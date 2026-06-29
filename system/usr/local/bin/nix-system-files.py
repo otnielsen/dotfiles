@@ -55,30 +55,10 @@ def install_program_files(new_env: Path, old_manifest: dict):
 
     for root, dirs, files in new_env.walk(top_down=True, follow_symlinks=True):
         if root.full_match(new_env):
-            for dir in (
-                'bin',
-                'sbin',
-            ):
-                try:
-                    dirs.remove(dir)
-                except ValueError:
-                    pass
-
-        elif root.full_match(f'{new_env}/share'):
-            for dir in (
-                'applications',
-                'bash-completion',
-                'fonts',
-                'gamemode',
-                'icons',
-                'locale',
-                'man',
-                'systemd',
-            ):
-                try:
-                    dirs.remove(dir)
-                except ValueError:
-                    pass
+            try:
+                dirs.remove('sbin')
+            except ValueError:
+                pass
 
         elif root.full_match(f'{new_env}/etc/**'):
             rel_dir = root.relative_to(new_env / 'etc', walk_up=False)
