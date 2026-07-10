@@ -3,6 +3,9 @@
     {
       "passKeys": "fjkl",
       "pattern": "https?://www\\.youtube\\.com/watch/?\\?v=*"
+    },
+    {
+      "pattern": "https?://192\\.168\\.1\\.213:4567/*"
     }
   ],
   "regexFindMode": true

@@ -1,3 +1,9 @@
-#viewerContainer > #viewer .page > .canvasWrapper > canvas {
-    filter: grayscale(100%) invert(100%);
+#viewerContainer>#viewer .page>.canvasWrapper>canvas {
+  filter: grayscale(100%) invert(100%);
+}
+
+@-moz-document url-prefix("http://192.168.1.213:4567/") {
+  div {
+    scrollbar-width: none;
+  }
 }
