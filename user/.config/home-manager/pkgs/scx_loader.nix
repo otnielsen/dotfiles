@@ -1,21 +1,26 @@
 {
-  clang,
   makeBinaryWrapper,
-  mold,
   scx,
   scx-loader,
+  stdenv,
 }:
-scx-loader.overrideAttrs (prev: {
-  cargoBuildType = "release";
+stdenv.mkDerivation {
+  pname = "scx-loader-custom";
+  version = scx-loader.version;
 
-  nativeBuildInputs = prev.nativeBuildInputs ++ [
-    clang
+  src = scx-loader.src;
+
+  nativeBuildInputs = [
     makeBinaryWrapper
-    mold
   ];
 
-  postInstall = ''
-    rm "$out/bin/xtask"
+  installPhase = ''
+    install -Dm755 ${scx-loader}/bin/scx_loader \
+                   ${scx-loader}/bin/scxctl \
+                   -t "$out/bin"
+
+    wrapProgram "$out/bin/scx_loader" \
+        --prefix PATH : ${scx.rustscheds}/bin
 
     install -Dm644 services/scx_loader.service \
         -t "$out/lib/systemd/system"
@@ -30,18 +35,8 @@ scx-loader.overrideAttrs (prev: {
     install -Dm644 configs/scx_loader.toml \
         "$out/share/scx_loader/config.toml"
 
-    wrapProgram "$out/bin/scx_loader" \
-        --prefix PATH : ${scx.rustscheds}/bin
+    substituteInPlace "$out/lib/systemd/system/scx_loader.service" \
+                      "$out/share/dbus-1/system-services/org.scx.Loader.service" \
+                      --replace-fail "/usr/bin/scx_loader" "$out/bin/scx_loader"
   '';
-
-  env = prev.env // {
-    RUSTFLAGS = builtins.concatStringsSep " " [
-      "-Clink-arg=-fuse-ld=mold"
-      "-Clinker=clang"
-      "-Clto=thin"
-      "-Copt-level=3"
-      "-Cstrip=symbols"
-      "-Ctarget-cpu=haswell"
-    ];
-  };
-})
+}
