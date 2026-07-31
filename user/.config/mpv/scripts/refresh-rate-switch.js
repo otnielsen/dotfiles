@@ -203,7 +203,7 @@ function on_fullscreen_change(_, fullscreen) {
 function main() {
   switch (mp.utils.getenv("XDG_SESSION_TYPE")) {
     case "wayland":
-      switch (mp.utils.getenv("XDG_CURRENT_DESKTOP")) {
+      switch (mp.utils.getenv("XDG_SESSION_DESKTOP")) {
         case "KDE":
           output_func = kde_wayland;
           set_mode_cmd = function (output, mode) {
