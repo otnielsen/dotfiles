@@ -5,8 +5,10 @@ set -eu
 gamemoded -s
 scxctl get
 
-printf 'hidecursor loaded? '
-busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects isEffectLoaded s hidecursor | awk '{ print $2 }'
+if [ "$XDG_SESSION_DESKTOP" = 'KDE' ]; then
+    printf 'hidecursor loaded? '
+    busctl --user call org.kde.KWin /Effects org.kde.kwin.Effects isEffectLoaded s hidecursor | awk '{ print $2 }'
+fi
 
 printf 'governor: '
 cat /sys/devices/system/cpu/cpufreq/policy*/scaling_governor | sort -u

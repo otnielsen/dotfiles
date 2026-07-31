@@ -6,11 +6,15 @@ case "$1" in
 start)
     scxctl start --sched lavd --mode gaming
     pkexec /usr/local/libexec/gamemode-epp.sh gaming
-    busctl --user -q call org.kde.KWin /Effects org.kde.kwin.Effects loadEffect s hidecursor
+    if [ "$XDG_SESSION_DESKTOP" = 'KDE' ]; then
+        busctl --user -q call org.kde.KWin /Effects org.kde.kwin.Effects loadEffect s hidecursor
+    fi
     ;;
 stop)
     scxctl stop
     pkexec /usr/local/libexec/gamemode-epp.sh balanced
-    busctl --user -q call org.kde.KWin /Effects org.kde.kwin.Effects unloadEffect s hidecursor
+    if [ "$XDG_SESSION_DESKTOP" = 'KDE' ]; then
+        busctl --user -q call org.kde.KWin /Effects org.kde.kwin.Effects unloadEffect s hidecursor
+    fi
     ;;
 esac
