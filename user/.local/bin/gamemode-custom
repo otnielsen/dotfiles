@@ -1,0 +1,16 @@
+#!/bin/sh
+
+set -eu
+
+case "$1" in
+start)
+    scxctl start --sched lavd --mode gaming
+    pkexec /usr/local/libexec/gamemode-epp.sh gaming
+    busctl --user -q call org.kde.KWin /Effects org.kde.kwin.Effects loadEffect s hidecursor
+    ;;
+stop)
+    scxctl stop
+    pkexec /usr/local/libexec/gamemode-epp.sh balanced
+    busctl --user -q call org.kde.KWin /Effects org.kde.kwin.Effects unloadEffect s hidecursor
+    ;;
+esac
