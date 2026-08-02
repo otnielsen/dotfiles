@@ -44,20 +44,31 @@ fi
 
 cd "$(dirname "$path")"
 
-export DXVK_CONFIG_FILE=~/.config/dxvk/dxvk.conf
-export MANGOHUD=1
-export PROTONPATH=GE-Proton
-export PROTON_FSR4_RDNA3_UPGRADE=1
-export PROTON_USE_WOW64=1
-export RADV_TEX_ANISO=16
-export WINE_FULLSCREEN_INTEGER_SCALING=1
-
 basename=$(basename "$path" .exe)
-
-export WINEPREFIX="$conf_dir/prefixes/$basename"
+env_file="$conf_dir/envvars/${basename}"
+arg_file="$conf_dir/args/${basename}"
 
 set --
-script_path="$conf_dir/scripts/${basename}.sh"
-[ -f "$script_path" ] && . "$script_path"
+if [ -f "$arg_file" ]; then
+    while read -r arg || [ -n "$arg" ]; do
+        set -- "$@" "$arg"
+    done <"$arg_file"
+fi
 
-exec gamemoderun umu-run "$path" "$@"
+exec systemd-run --user \
+    --unit="$basename" \
+    --service-type=exec \
+    --same-dir \
+    --collect \
+    --setenv=DXVK_CONFIG_FILE="$HOME/.config/dxvk/dxvk.conf" \
+    --setenv=MANGOHUD=1 \
+    --setenv=PROTONPATH=GE-Proton \
+    --setenv=PROTON_FSR4_RDNA3_UPGRADE=1 \
+    --setenv=PROTON_USE_WOW64=1 \
+    --setenv=RADV_TEX_ANISO=16 \
+    --setenv=WINEPREFIX="$conf_dir/prefixes/$basename" \
+    --setenv=WINE_FULLSCREEN_INTEGER_SCALING=1 \
+    --property=EnvironmentFile="-$env_file" \
+    --property=ExecStartPre="'$HOME/.local/bin/gamemode-custom' start" \
+    --property=ExecStopPost="'$HOME/.local/bin/gamemode-custom' stop" \
+    umu-run "$path" "$@"
