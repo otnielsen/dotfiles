@@ -15,3 +15,14 @@ cat /sys/devices/system/cpu/cpufreq/policy*/scaling_governor | sort -u
 
 printf 'epp: '
 cat /sys/devices/system/cpu/cpufreq/policy*/energy_performance_preference | sort -u
+
+card=$(udevadm trigger --dry-run --verbose \
+    --subsystem-match=pci \
+    --property-match=DRIVER=amdgpu \
+    --attr-match=unique_id=22190ab2d9cbbf14)
+profile_file="$card/pp_power_profile_mode"
+
+if [ -d "$card" ] && [ -f "$profile_file" ]; then
+    printf 'gpu_profile: '
+    grep -om1 '\S*\*' "$profile_file"
+fi
