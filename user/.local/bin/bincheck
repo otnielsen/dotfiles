@@ -21,7 +21,7 @@ entry_devices=$(printf '%s' "$fstab_entries" | jq -r 'keys[]')
 while read -r device || [ -n "$device" ]; do
     pattern=$(printf '%s' "$fstab_entries" | jq -r --arg device "$device" '.[$device]')
 
-    grep -qE "$pattern" /etc/fstab || {
+    grep -qExm1 "$pattern" /etc/fstab || {
         echo "$device entry missing from /etc/fstab" >&2
         exit_status=1
     }

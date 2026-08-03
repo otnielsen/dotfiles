@@ -6,7 +6,7 @@ Wants=network-online.target
 [Service]
 Type=exec
 ExecStart=/usr/local/bin/portforward.sh
-ExecStopPost=/bin/sh -c 'wg show interfaces | grep -xq wg0 && wg-quick down wg0'
+ExecStopPost=/bin/sh -c 'wg show interfaces | grep -Fxqm1 wg0 && wg-quick down wg0'
 Restart=on-failure
 
 [Install]

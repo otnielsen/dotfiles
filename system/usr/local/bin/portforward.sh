@@ -5,7 +5,7 @@ set -eu
 gateway='10.2.0.1'
 interface='wg0'
 
-wg show interfaces | grep -xq "$interface" || wg-quick up "$interface"
+wg show interfaces | grep -Fxqm1 "$interface" || wg-quick up "$interface"
 
 while true; do
     if fping -q $gateway; then
@@ -17,7 +17,7 @@ while true; do
             curl --no-progress-meter -d "json={\"listen_port\": $listen_port}" http://localhost:8080/api/v2/app/setPreferences
         fi
     else
-        wg show interfaces | grep -xq "$interface" && wg-quick down "$interface"
+        wg show interfaces | grep -Fxqm1 "$interface" && wg-quick down "$interface"
         fping -q ip.me && wg-quick up "$interface"
     fi
     sleep 45
