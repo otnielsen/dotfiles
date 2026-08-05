@@ -65,7 +65,6 @@ exec systemd-run --user \
     --setenv=PROTONPATH=GE-Proton \
     --setenv=PROTON_FSR4_RDNA3_UPGRADE=1 \
     --setenv=PROTON_USE_WOW64=1 \
-    --setenv=RADV_TEX_ANISO=16 \
     --setenv=WINEPREFIX="$conf_dir/prefixes/$basename" \
     --setenv=WINE_FULLSCREEN_INTEGER_SCALING=1 \
     --property=EnvironmentFile="-$env_file" \
