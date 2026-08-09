@@ -64,7 +64,8 @@ exec systemd-run --user \
     --setenv=MANGOHUD=1 \
     --setenv=PROTONPATH=GE-Proton \
     --setenv=PROTON_ENABLE_WAYLAND=1 \
-    --setenv=PROTON_FSR4_RDNA3_UPGRADE=1 \
+    --setenv=PROTON_OPTISCALER_CONFIG='Upscalers.Dx12Upscaler=fsr31;Menu.FpsOverlayType=1;Menu.DisableSplash=true;Plugins.LoadAsiPlugins=true' \
+    --setenv=PROTON_USE_OPTISCALER=1 \
     --setenv=PROTON_USE_WOW64=1 \
     --setenv=WINEPREFIX="$conf_dir/prefixes/$basename" \
     --setenv=WINE_FULLSCREEN_INTEGER_SCALING=1 \
