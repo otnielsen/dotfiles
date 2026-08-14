@@ -1,3 +1,4 @@
 enable ly@.service tty2
 enable nix-daemon.service
 enable scx_loader.service
+enable systemd-oomd.service

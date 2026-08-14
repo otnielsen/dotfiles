@@ -1,0 +1,1 @@
+ACTION=="add", KERNEL=="zswap", SUBSYSTEM=="module", ATTR{parameters/enabled}="1", ATTR{parameters/compressor}="lz4", ATTR{parameters/shrinker_enabled}="1"
