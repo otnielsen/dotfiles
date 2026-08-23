@@ -379,7 +379,9 @@ vim.lsp.config('tinymist', {
     preview = {
       background = {
         enabled = true,
+        args = { '--open' },
       },
+      invertColors = 'auto',
     },
   },
 })
