@@ -1,0 +1,27 @@
+[Added Associations]
+audio/flac=mpv.desktop
+audio/mp4=mpv.desktop
+audio/mpeg=mpv.desktop
+audio/vnd.wave=mpv.desktop
+inode/directory=lf.desktop
+video/mp4=mpv.desktop
+video/ogg=mpv.desktop
+video/vnd.avi=mpv.desktop
+video/webm=mpv.desktop
+video/x-matroska=mpv.desktop
+x-scheme-handler/http=org.mozilla.firefox.desktop
+x-scheme-handler/https=org.mozilla.firefox.desktop
+
+[Default Applications]
+audio/flac=mpv.desktop
+audio/mp4=mpv.desktop
+audio/mpeg=mpv.desktop
+audio/vnd.wave=mpv.desktop
+inode/directory=lf.desktop
+video/mp4=mpv.desktop
+video/ogg=mpv.desktop
+video/vnd.avi=mpv.desktop
+video/webm=mpv.desktop
+video/x-matroska=mpv.desktop
+x-scheme-handler/http=org.mozilla.firefox.desktop
+x-scheme-handler/https=org.mozilla.firefox.desktop
