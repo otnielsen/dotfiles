@@ -6,6 +6,7 @@
     home-manager
     lazygit
     lf
+    llama-cpp-vulkan
     mangohud
     mesa
     mesa-demos
