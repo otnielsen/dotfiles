@@ -2,8 +2,10 @@
 
 {
   home.packages = with pkgs; [
+    btop
     ffmpeg-headless.lib
     home-manager
+    htop
     lazygit
     lf
     llama-cpp-vulkan
@@ -13,6 +15,7 @@
     mpv
     nerd-fonts.fira-code
     noto-fonts-color-emoji
+    nvtopPackages.amd
     tmux
     typst
     umu-launcher
@@ -24,6 +27,11 @@
     run /usr/bin/pkexec /usr/local/bin/hmcopy.sh ${config.home.username}
     run ${pkgs.stow}/bin/stow $VERBOSE_ARG --restow --no-folding --dir=${config.home.homeDirectory}/dotfiles user
   '';
+
+  xdg.configFile = {
+    "htop/htoprc".source = config.lib.file.mkOutOfStoreSymlink "/dev/null";
+    "nvtop/interface.ini".source = config.lib.file.mkOutOfStoreSymlink "/dev/null";
+  };
 
   nixpkgs.config.allowUnfree = true;
 
