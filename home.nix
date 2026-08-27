@@ -25,13 +25,14 @@
 
   home.activation.myCopyToSystemAction = lib.hm.dag.entryAfter ["writeBoundary"] ''
     run /usr/bin/pkexec /usr/local/bin/hmcopy.sh ${config.home.username}
-    run ${pkgs.stow}/bin/stow $VERBOSE_ARG --restow --no-folding --dir=${config.home.homeDirectory}/dotfiles user
   '';
 
-  xdg.configFile = {
-    "htop/htoprc".source = config.lib.file.mkOutOfStoreSymlink "/dev/null";
-    "nvtop/interface.ini".source = config.lib.file.mkOutOfStoreSymlink "/dev/null";
+  home.file."." = {
+    source = "${config.home.homeDirectory}/dotfiles/user";
+    recursive = true;
   };
+
+  xdg.configFile."home-manager/home.nix".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home.nix";
 
   nixpkgs.config.allowUnfree = true;
 
