@@ -33,6 +33,7 @@
   };
 
   xdg.configFile."home-manager/home.nix".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home.nix";
+  xdg.configFile."alacritty/cyberdream.toml".source = "${pkgs.vimPlugins.cyberdream-nvim}/extras/alacritty/cyberdream.toml";
 
   nixpkgs.config.allowUnfree = true;
 
