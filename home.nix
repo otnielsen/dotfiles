@@ -2,11 +2,9 @@
 
 {
   home.packages = with pkgs; [
-    btop
     ffmpeg-headless.lib
     home-manager
     htop
-    lazygit
     lf
     llama-cpp-vulkan
     mangohud
@@ -33,7 +31,55 @@
   };
 
   xdg.configFile."home-manager/home.nix".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/home.nix";
-  xdg.configFile."alacritty/cyberdream.toml".source = "${pkgs.vimPlugins.cyberdream-nvim}/extras/alacritty/cyberdream.toml";
+
+  programs.alacritty = {
+    enable = true;
+    settings = {
+      general = {
+        import = [
+          "${pkgs.vimPlugins.cyberdream-nvim}/extras/alacritty/cyberdream.toml"
+        ];
+      };
+      window = {
+        decorations = "none";
+        startup_mode = "Fullscreen";
+      };
+      keyboard.bindings = [
+        {
+          key = "F11";
+          action = "ToggleFullscreen";
+        }
+      ];
+      mouse = {
+        hide_when_typing = true;
+      };
+    };
+  };
+
+  programs.btop = {
+    enable = true;
+    settings = {
+      color_theme = "cyberdream";
+      vim_keys = true;
+      disable_mouse = true;
+      save_config_on_exit = false;
+    };
+    themes = {
+      cyberdream = builtins.readFile "${pkgs.vimPlugins.cyberdream-nvim}/extras/btop/cyberdream.theme";
+    };
+  };
+
+  programs.lazygit = {
+    enable = true;
+    settings = let
+        cyberdream = "${pkgs.vimPlugins.cyberdream-nvim}/extras/lazygit/cyberdream.yml";
+        json = pkgs.runCommandLocal "cyberdream-lazygit.json" { } ''
+          ${pkgs.yj}/bin/yj < ${cyberdream} > $out
+        '';
+        config = { gui.screenMode = "half"; notARepository = "quit"; };
+      in
+        lib.recursiveUpdate (lib.importJSON json) config;
+  };
 
   nixpkgs.config.allowUnfree = true;
 
