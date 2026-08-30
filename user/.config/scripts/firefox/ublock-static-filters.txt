@@ -1,0 +1,3 @@
+*$removeparam=utm_source
+||store.steampowered.com^$removeparam=snr
+||youtube.com/watch^$removeparam=~/^(v|t)=/
