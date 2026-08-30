@@ -4,10 +4,6 @@
     ./modules
   ];
 
-  home.activation.myCopyToSystemAction = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    run /usr/bin/pkexec /usr/local/bin/hmcopy.sh ${config.home.username}
-  '';
-
   home.file."./." = {
     source = "${config.home.homeDirectory}/dotfiles/user";
     recursive = true;
