@@ -1,0 +1,1 @@
+allow_other,default_permissions,_netdev,reconnect,x-systemd.automount,IdentityFile=/home/olive/.ssh/id_ed25519
