@@ -5,4 +5,5 @@
 · Proton VPN
 · SponsorBlock
 · Vimium
+· Violentmonkey
 · uBlock Origin
