@@ -67,8 +67,14 @@ alias lg='lazygit'
 alias dl='curl -fL --remote-name-all' # dl for download
 
 lfcd() {
-    # `command` is needed in case `lfcd` is aliased to `lf`
-    cd "$(command lf -print-last-dir "$@")" || return
+    local file
+    file=$(mktemp)
+    command lf -last-dir-path "$file" "$@"
+
+    local path
+    path=$(cat "$file")
+    rm -f "$file"
+    cd "$path" || return
 }
 
 alias lf='lfcd'
