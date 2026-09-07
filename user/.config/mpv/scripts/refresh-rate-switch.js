@@ -22,12 +22,19 @@ function gcd(a, b) {
   return b === 0 ? a : gcd(b, a % b);
 }
 
-function get_best_mode(modes, current_mode, fps) {
+function Display(name, output_modes, default_mode, current_mode) {
+  this.name = name;
+  this.output_modes = output_modes;
+  this.default_mode = default_mode;
+  this.current_mode = current_mode;
+}
+
+function get_best_mode(output, fps) {
   var fps_rounded = Math.round(fps);
 
   var lowest_q_modes = [];
   var lowest_q = Infinity;
-  modes.forEach(function (mode) {
+  output.output_modes.forEach(function (mode) {
     var q = fps_rounded / gcd(Math.round(mode.refreshRate), fps_rounded);
 
     if (q < lowest_q) {
@@ -38,12 +45,17 @@ function get_best_mode(modes, current_mode, fps) {
     }
   });
 
+  var default_mode_in_lowest_q_modes = false;
   var i;
-  if (current_mode) {
-    for (i = 0; i < lowest_q_modes.length; i++) {
-      if (lowest_q_modes[i].id === current_mode.id) return;
+  for (i = 0; i < lowest_q_modes.length; i++) {
+    switch (lowest_q_modes[i].id) {
+      case output.current_mode.id:
+        return;
+      case output.default_mode.id:
+        default_mode_in_lowest_q_modes = true;
     }
   }
+  if (default_mode_in_lowest_q_modes) return output.default_mode;
 
   lowest_q_modes.sort(function (a, b) {
     return b.refreshRate - a.refreshRate;
@@ -69,13 +81,6 @@ function get_best_mode(modes, current_mode, fps) {
   });
 
   return lowest_error_mode;
-}
-
-function Display(name, output_modes, default_mode, current_mode) {
-  this.name = name;
-  this.output_modes = output_modes;
-  this.default_mode = default_mode;
-  this.current_mode = current_mode;
 }
 
 function kde_wayland(display_names) {
@@ -117,9 +122,47 @@ var output_func;
 var current_container_fps;
 var current_output;
 var currently_fullscreen;
+var multi_display_warning_printed;
+
+var LOCK_DIR;
+var xdg_runtime_dir = mp.utils.getenv("XDG_RUNTIME_DIR");
+if (xdg_runtime_dir) {
+  LOCK_DIR = xdg_runtime_dir;
+} else {
+  LOCK_DIR = "/tmp";
+}
+
+function acquire_lock(display_name) {
+  var r = mp.command_native({
+    name: "subprocess",
+    playback_only: false,
+    args: [
+      "/bin/sh",
+      "-c",
+      'exec >/dev/null 2>&1 3>"$1" && flock -n 3 && setsid -f waitpid "$2"',
+      "/bin/sh",
+      LOCK_DIR + "/mpv-refresh-rate-switch-" + display_name + ".lock",
+      mp.get_property("pid"),
+    ],
+  });
+
+  if (r.status === 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+function release_lock() {
+  mp.command_native({
+    name: "subprocess",
+    playback_only: false,
+    args: ["pkill", "-xf", "waitpid " + mp.get_property("pid")],
+  });
+}
 
 function set_mode(mode, pause) {
-  r = mp.command_native({
+  var r = mp.command_native({
     name: "subprocess",
     playback_only: false,
     args: set_mode_cmd(current_output, mode),
@@ -136,68 +179,52 @@ function set_mode(mode, pause) {
   }
 }
 
+function set_default_mode(pause) {
+  if (!current_output) return;
+
+  if (current_output.default_mode.id !== current_output.current_mode.id)
+    set_mode(current_output.default_mode, pause);
+
+  release_lock();
+  current_output = null;
+}
+
 function set_optimal_refresh_rate() {
-  var best_mode = get_best_mode(
-    current_output.output_modes,
-    current_output.current_mode,
-    current_container_fps
-  );
-  if (best_mode !== undefined) set_mode(best_mode, true);
+  var best_mode;
+  if (current_output && current_container_fps) {
+    best_mode = get_best_mode(current_output, current_container_fps);
+    if (best_mode !== undefined) set_mode(best_mode, true);
+  }
 }
 
-function on_fps_change(_, fps) {
-  if (!fps || fps === current_container_fps) return;
-  current_container_fps = fps;
+function on_display_change() {
+  var display_names = mp.get_property("display-names");
 
-  if (currently_fullscreen === true && current_output)
-    set_optimal_refresh_rate();
-}
-
-function on_display_change(_, display_names) {
-  if (
-    !display_names ||
-    (current_output && current_output.name === display_names)
-  )
-    return;
-
+  if (!display_names) return;
   if (display_names.indexOf(",") !== -1) {
     mp.msg.warn("Window covers multiple displays, which may cause stuttering.");
+    multi_display_warning_printed = true;
     return;
   }
+  if (multi_display_warning_printed === true) {
+    print("Window covers only one display now.");
+    multi_display_warning_printed = false;
+  }
+  if (
+    (current_output && current_output.name === display_names) ||
+    currently_fullscreen !== true
+  )
+    return;
+
+  set_default_mode(false);
+  if (acquire_lock(display_names) !== true) return;
 
   var output = output_func(display_names);
-  if (output === undefined) return;
-  if (
-    current_output &&
-    current_output.default_mode.id !== current_output.current_mode.id
-  )
-    set_mode(current_output.default_mode, false);
+  if (output === undefined || Math.round(output.default_mode.refreshRate) > 120)
+    return;
 
-  if (Math.round(output.default_mode.refreshRate) > 120) {
-    current_output = null;
-  } else {
-    current_output = output;
-    if (currently_fullscreen && current_container_fps)
-      set_optimal_refresh_rate();
-  }
-}
-
-function on_fullscreen_change(_, fullscreen) {
-  switch (fullscreen) {
-    case true: {
-      currently_fullscreen = true;
-      if (current_output && current_container_fps) set_optimal_refresh_rate();
-      break;
-    }
-    case false:
-      currently_fullscreen = false;
-      if (
-        current_output &&
-        current_output.default_mode.id !== current_output.current_mode.id
-      )
-        set_mode(current_output.default_mode, true);
-      break;
-  }
+  current_output = output;
+  set_optimal_refresh_rate();
 }
 
 function main() {
@@ -221,15 +248,31 @@ function main() {
       return;
   }
 
-  mp.observe_property("container-fps", "number", on_fps_change);
   mp.observe_property("display-names", "string", on_display_change);
-  mp.observe_property("fullscreen", "bool", on_fullscreen_change);
+
+  mp.observe_property("container-fps", "number", function (_, fps) {
+    if (fps && fps !== current_container_fps) {
+      current_container_fps = fps;
+      set_optimal_refresh_rate();
+    }
+  });
+
+  mp.observe_property("fullscreen", "bool", function (_, fullscreen) {
+    if (fullscreen === true) {
+      currently_fullscreen = true;
+      on_display_change();
+    } else {
+      currently_fullscreen = false;
+      set_default_mode(true);
+    }
+  });
+
+  mp.observe_property("playlist-playing-pos", "number", function (_, pos) {
+    if (pos >= 0) on_display_change();
+  });
+
   mp.register_event("shutdown", function () {
-    if (
-      current_output &&
-      current_output.default_mode.id !== current_output.current_mode.id
-    )
-      set_mode(current_output.default_mode, false);
+    set_default_mode(false);
   });
 }
 
