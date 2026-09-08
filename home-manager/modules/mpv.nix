@@ -9,6 +9,7 @@
       interpolation = true;
       hdr-reference-white = 100;
       fullscreen = true;
+      osc = false;
       audio-display = false;
       slang = "en";
       alang = builtins.concatStringsSep "," [
