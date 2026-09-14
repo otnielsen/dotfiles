@@ -4,49 +4,41 @@ set -eu
 
 menu='fuzzel --dmenu --only-match'
 conf_dir=~/.config/game-menu
-menu_options=$(cat "$conf_dir/games.json")
-titles=$(printf '%s' "$menu_options" | jq -r 'keys[]')
+menu_options=$(find "$conf_dir/games" -maxdepth 1 -type l -xtype f -printf '%f\n')
 
 icon_dir="$conf_dir/icons"
 cd "$icon_dir"
 icon_menu=''
 while read -r title || [ -n "$title" ]; do
-    path=$(printf '%s' "$menu_options" | jq -r --arg title "$title" '.[$title]' | sed "s|^~/|$HOME/|")
-
-    if [ "${path#/}" = "$path" ]; then
-        echo "$path: must be an absolute path"
-        continue
-    elif [ ! -f "$path" ]; then
-        echo "$path: no such file"
-        continue
-    fi
+    path=$(realpath "$conf_dir/games/$title")
 
     basename=$(basename "$path" .exe)
-    [ -f "${basename}.png" ] || exe2png "$path" || basename=
+    [ ! -f "${title}.png" ] &&
+        exe2png "$path" &&
+        [ "$basename" != "$title" ] &&
+        mv "${basename}.png" "${title}.png"
 
-    icon_menu="${icon_menu}${title}\0icon\x1f${icon_dir}/${basename}.png\n"
+    icon_menu="${icon_menu}${title}\0icon\x1f${icon_dir}/${title}.png\n"
 
 done <<EOF
-$titles
+$menu_options
 EOF
 
 choice=$(printf '%b' "$icon_menu" | $menu)
 [ -z "$choice" ] && exit 1
 
-path=$(printf '%s' "$menu_options" | jq -r --arg choice "$choice" '.[$choice]' | sed "s|^~/|$HOME/|")
+path=$(realpath "$conf_dir/games/$choice")
 
-if [ "$path" = 'null' ] || [ -z "$path" ]; then
-    exit 1
-elif [ "$(file -b --mime-type "$path")" != application/vnd.microsoft.portable-executable ]; then
+if [ "$(file -b --mime-type "$path")" != application/vnd.microsoft.portable-executable ]; then
     echo "$path: not a windows executable" >&2
     exit 1
 fi
 
 cd "$(dirname "$path")"
 
-basename=$(basename "$path" .exe)
-env_file="$conf_dir/envvars/${basename}"
-arg_file="$conf_dir/args/${basename}"
+filename=$(printf '%s' "$choice" | iconv -t ASCII//TRANSLIT | sed 's/ /_/g ; s/[^a-zA-Z0-9_.-]//g')
+env_file="$conf_dir/envvars/$filename"
+arg_file="$conf_dir/args/$filename"
 
 set --
 if [ -f "$arg_file" ]; then
@@ -56,7 +48,7 @@ if [ -f "$arg_file" ]; then
 fi
 
 exec systemd-run --user \
-    --unit="$basename" \
+    --unit="$filename" \
     --service-type=exec \
     --same-dir \
     --collect \
@@ -67,7 +59,7 @@ exec systemd-run --user \
     --setenv=PROTON_OPTISCALER_CONFIG='Upscalers.Dx12Upscaler=fsr31;Menu.FpsOverlayType=1;Menu.DisableSplash=true;Plugins.LoadAsiPlugins=true' \
     --setenv=PROTON_USE_OPTISCALER=1 \
     --setenv=PROTON_USE_WOW64=1 \
-    --setenv=WINEPREFIX="$conf_dir/prefixes/$basename" \
+    --setenv=WINEPREFIX="$conf_dir/prefixes/$filename" \
     --setenv=WINE_FULLSCREEN_INTEGER_SCALING=1 \
     --property=EnvironmentFile="-$env_file" \
     --property=ExecStartPre="'$HOME/.local/bin/gamemode-custom' start" \
