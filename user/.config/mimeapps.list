@@ -9,8 +9,8 @@ video/ogg=mpv.desktop
 video/vnd.avi=mpv.desktop
 video/webm=mpv.desktop
 video/x-matroska=mpv.desktop
-x-scheme-handler/http=org.mozilla.firefox.desktop
-x-scheme-handler/https=org.mozilla.firefox.desktop
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
 
 [Default Applications]
 audio/flac=mpv.desktop
@@ -23,5 +23,5 @@ video/ogg=mpv.desktop
 video/vnd.avi=mpv.desktop
 video/webm=mpv.desktop
 video/x-matroska=mpv.desktop
-x-scheme-handler/http=org.mozilla.firefox.desktop
-x-scheme-handler/https=org.mozilla.firefox.desktop
+x-scheme-handler/http=firefox.desktop
+x-scheme-handler/https=firefox.desktop
