@@ -1,9 +1,0 @@
-# list of extensions to install in firefox
-
-· Dark Reader
-· I still don't care about cookies
-· Proton VPN
-· SponsorBlock
-· Vimium
-· Violentmonkey
-· uBlock Origin

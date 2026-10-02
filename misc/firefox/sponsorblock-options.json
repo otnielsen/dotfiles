@@ -1,0 +1,20 @@
+{
+  "categorySelections": [
+    { "name": "chapter", "option": 0 },
+    { "name": "filler", "option": 2 },
+    { "name": "hook", "option": 2 },
+    { "name": "interaction", "option": 2 },
+    { "name": "intro", "option": 2 },
+    { "name": "music_offtopic", "option": 0 },
+    { "name": "outro", "option": 2 },
+    { "name": "poi_highlight", "option": 0 },
+    { "name": "preview", "option": 2 },
+    { "name": "selfpromo", "option": 2 },
+    { "name": "sponsor", "option": 2 }
+  ],
+  "dontShowNotice": true,
+  "hideInfoButtonPlayerControls": true,
+  "hideVideoPlayerControls": true,
+  "trackDownvotes": false,
+  "trackViewCount": false
+}
