@@ -34,6 +34,6 @@ in
 
   home.username = builtins.getEnv "USER";
   home.homeDirectory = HOME;
-  home.stateVersion = "25.11"; # Please read the comment before changing.
+  home.stateVersion = "26.05";
   home.enableNixpkgsReleaseCheck = false;
 }
