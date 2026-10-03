@@ -1,14 +1,35 @@
 #!/bin/sh
 
-set -eu
+set -e
 
 if [ "$(id -u)" != "0" ]; then
     echo "Must be run as root." >&2
     exit 1
 fi
 
-user="$1"
+wheel_users=$(awk -F: '$1 == "wheel" { print $4; exit }' /etc/group | tr , '\n')
+if [ -z "$wheel_users" ]; then
+    echo "No users in wheel group" >&2
+    exit 1
+fi
 
-id "$user" >/dev/null || exit 1
+if [ -n "$1" ]; then
+    if echo "$wheel_users" | grep -Fxqm1 "$1"; then
+        user="$1"
+    else
+        echo "$1 not in wheel group." >&2
+        exit 1
+    fi
+else
+    if [ "$(printf '%s' "$wheel_users" | wc -l)" = 0 ]; then
+        user="$wheel_users"
+    else
+        echo "Multiple users in wheel group." >&2
+        echo "A user must be passed as an argument." >&2
+        exit 1
+    fi
+fi
+
+echo "user: $user"
 
 rsync -rlptv "/home/$user/dotfiles/system/" /
