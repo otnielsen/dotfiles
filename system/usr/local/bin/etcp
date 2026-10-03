@@ -30,6 +30,17 @@ else
     fi
 fi
 
-echo "user: $user"
+home=$(awk -F: -v user="$user" '$1 == user { print $6; exit }' /etc/passwd)
 
-rsync -rlptv "/home/$user/dotfiles/system/" /
+echo "user: $user"
+echo "home: $home"
+
+rsync -rlptv "$home/dotfiles/system/" /
+
+if ! grep -Fsxqm1 ID=nixos /etc/os-release; then
+    {
+        echo "L+ /run/opengl-driver - - - - $home/.local/state/nix/profile"
+    } >/etc/tmpfiles.d/graphics-driver.conf
+
+    ln -sf "$home/.local/state/nix/profile" /run/opengl-driver
+fi
