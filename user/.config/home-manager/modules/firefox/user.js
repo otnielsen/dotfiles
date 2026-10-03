@@ -37,6 +37,7 @@ user_pref("browser.tabs.insertAfterCurrent", true);
 user_pref("browser.toolbars.bookmarks.visibility", "never");
 user_pref("browser.translations.automaticallyPopup", false);
 user_pref("browser.uitour.enabled", false);
+user_pref("browser.urlbar.quicksuggest.enabled", false);
 user_pref("browser.urlbar.speculativeConnect.enabled", false);
 user_pref("browser.urlbar.suggest.bookmark", false);
 user_pref("browser.urlbar.suggest.engines", false);
