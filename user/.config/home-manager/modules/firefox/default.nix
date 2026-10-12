@@ -1,4 +1,11 @@
 { config, ... }:
+
+let
+  importedLists = [
+    "https://raw.githubusercontent.com/fmhy/FMHYFilterlist/main/filterlist.txt"
+    "https://raw.githubusercontent.com/mchangrh/yt-neuter/main/filters/sponsorblock.txt"
+  ];
+in
 {
   programs.firefox = {
     enable = true;
@@ -17,12 +24,6 @@
           updates_disabled = false;
           private_browsing = true;
           default_area = "navbar";
-        };
-        "idcac-pub@guus.ninja" = {
-          installation_mode = "normal_installed";
-          updates_disabled = false;
-          private_browsing = true;
-          default_area = "menupanel";
         };
         "sponsorBlocker@ajay.app" = {
           installation_mode = "normal_installed";
@@ -53,6 +54,39 @@
           updates_disabled = false;
           private_browsing = true;
           default_area = "menupanel";
+        };
+      };
+      "3rdparty".Extensions = {
+        "uBlock0@raymondhill.net".adminSettings = {
+          userSettings = {
+            inherit importedLists;
+          };
+          selectedFilterLists = [
+            "user-filters"
+            "ublock-filters"
+            "ublock-badware"
+            "ublock-privacy"
+            "ublock-quick-fixes"
+            "ublock-unbreak"
+            "easylist"
+            "easyprivacy"
+            "urlhaus-1"
+            "plowe-0"
+            "fanboy-cookiemonster"
+            "ublock-cookies-easylist"
+          ] ++ importedLists;
+          userFilters = ''
+            *$removeparam=utm_source
+            ||store.steampowered.com^$removeparam=snr
+            ||*.cfd^
+            ||youtube.com/watch^$removeparam=pp
+            youtube.com##.annotation
+            ! YouTube ambient mode
+            youtube.com###cinematics
+            youtube.com##.ytp-autonav-toggle
+            ! Google signin popup
+            ###credential_picker_container
+          '';
         };
       };
     };
