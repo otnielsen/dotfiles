@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ pkgs, config, lib, ... }:
 
 let
   HOME = builtins.getEnv "HOME";
@@ -36,4 +36,19 @@ in
   home.homeDirectory = HOME;
   home.stateVersion = "26.05";
   home.enableNixpkgsReleaseCheck = false;
+
+  _module.args.withgamemode = package: binary: pkgs.symlinkJoin {
+    pname = "${package.pname}-withgamemode";
+    version = package.version;
+    paths = [
+      package
+    ];
+    nativeBuildInputs = [
+      pkgs.makeBinaryWrapper
+    ];
+    postBuild = ''
+      wrapProgram "$out/bin/${binary}" \
+          --prefix LD_LIBRARY_PATH : '${pkgs.gamemode.lib}/lib'
+    '';
+  };
 }
