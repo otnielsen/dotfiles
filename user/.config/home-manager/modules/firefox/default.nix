@@ -89,6 +89,24 @@ in
           '';
         };
       };
+      ClearOnShutdown = {
+        BrowsingHistoryAndDownloads = true;
+        Cache = true;
+        CookiesAndStorage = true;
+        FormData = true;
+        SiteSettings = true;
+        Exceptions = [
+          "http://192.168.1.213:8080"
+          "http://192.168.1.213:8096"
+          "https://cs.rin.ru"
+          "https://github.com"
+          "https://mail.google.com"
+          "https://reddit.com"
+          "https://store.steampowered.com"
+          "https://vault.bitwarden.com"
+          "https://youtube.com"
+        ];
+      };
     };
   };
 }
