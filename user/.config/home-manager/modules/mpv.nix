@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   programs.mpv = {
     enable = true;
@@ -36,6 +36,14 @@
         ];
         hash = "true";
       };
+    };
+  };
+  services."jellyfin-mpv-shim" = {
+    enable = true;
+    mpvConfig = config.programs.mpv.config;
+    settings = {
+      enable_gui = false;
+      osc_style = "none";
     };
   };
 }

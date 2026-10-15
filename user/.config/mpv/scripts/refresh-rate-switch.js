@@ -271,6 +271,12 @@ function main() {
     if (pos >= 0) on_display_change();
   });
 
+  mp.observe_property("idle-active", "bool", function (_, idle) {
+    if (idle === true) {
+      set_default_mode(false);
+    }
+  });
+
   mp.register_event("shutdown", function () {
     set_default_mode(false);
   });

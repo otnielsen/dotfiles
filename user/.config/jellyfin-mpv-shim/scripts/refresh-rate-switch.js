@@ -1,0 +1,1 @@
+../../mpv/scripts/refresh-rate-switch.js
