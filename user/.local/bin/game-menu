@@ -47,20 +47,65 @@ if [ -f "$arg_file" ]; then
     done <"$arg_file"
 fi
 
+net=$(ip route get 9.9.9.9 | awk '{ for(i=1;i<=NF;i++) if($i=="dev") {print $(i+1); exit} }')
+dns=$(resolvectl status "$net" | awk -F ': ' '$1 == "Current DNS Server" { print $2; exit }')
+tz=$(timedatectl --property=Timezone show | awk -F '=' '{ print $2 }')
+if [ "${path#/media}" != "$path" ]; then
+    enable_media='--noblacklist=/media'
+else
+    enable_media=
+fi
+prefix="$conf_dir/prefixes/$filename"
+home="$conf_dir/home"
+dxvk_conf="$home/config/dxvk/dxvk.conf"
+
 exec systemd-run --user \
     --unit="$filename" \
     --service-type=exec \
     --same-dir \
     --collect \
-    --setenv=DXVK_CONFIG_FILE="$HOME/.config/dxvk/dxvk.conf" \
     --setenv=MANGOHUD=1 \
     --setenv=PROTONPATH=GE-Proton \
     --setenv=PROTON_ENABLE_WAYLAND=1 \
     --setenv=PROTON_OPTISCALER_CONFIG='Upscalers.Dx12Upscaler=fsr31;Menu.FpsOverlayType=1;Menu.DisableSplash=true;Plugins.LoadAsiPlugins=true' \
     --setenv=PROTON_USE_WOW64=1 \
-    --setenv=WINEPREFIX="$conf_dir/prefixes/$filename" \
     --setenv=WINE_FULLSCREEN_INTEGER_SCALING=1 \
     --property=EnvironmentFile="-$env_file" \
     --property=ExecStartPre="'$HOME/.local/bin/gamemode-custom' start" \
     --property=ExecStopPost="'$HOME/.local/bin/gamemode-custom' stop" \
+    firejail --noprofile \
+    $enable_media \
+    --caps.drop=all \
+    --disable-mnt \
+    --dns="$dns" \
+    --env=DXVK_CONFIG_FILE="$dxvk_conf" \
+    --env=TZ="$tz" \
+    --env=WINEPREFIX="$prefix" \
+    --env=XDG_CACHE_HOME="$home/cache" \
+    --env=XDG_CONFIG_HOME="$home/config" \
+    --env=XDG_DATA_HOME="$home/data" \
+    --env=XDG_STATE_HOME="$home/.local/state" \
+    --keep-dev-ntsync \
+    --mkdir="$home" \
+    --mkdir="$prefix" \
+    --net="$net" \
+    --netfilter='/etc/firejail/nolocal.net' \
+    --nodvd \
+    --nogroups \
+    --nonewprivs \
+    --noroot \
+    --notv \
+    --novideo \
+    --private-bin='sh,env' \
+    --private-dev \
+    --private-etc='@tls-ca,zoneinfo' \
+    --private-tmp \
+    --seccomp='!pivot_root,!mount,!umount2,!process_vm_readv,!userfaultfd,!mount_setattr' \
+    --whitelist="$(realpath "$dxvk_conf")" \
+    --whitelist="$(realpath "$home/config/MangoHud/MangoHud.conf")" \
+    --whitelist="$(realpath "$home/config/MangoHud/presets.conf")" \
+    --whitelist="$(realpath .)" \
+    --whitelist="$XDG_STATE_HOME/nix/profile" \
+    --whitelist="$home" \
+    --whitelist="$prefix" \
     umu-run "$path" "$@"
