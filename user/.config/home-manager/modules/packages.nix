@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, firejailed, ... }:
 {
   home.packages = with pkgs; [
     ffmpeg-headless.lib
@@ -17,5 +17,7 @@
     umu-launcher
     vulkan-tools
     yt-dlp
+
+    (firejailed librewolf-bin "librewolf")
   ];
 }

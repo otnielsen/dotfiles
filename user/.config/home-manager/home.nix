@@ -37,18 +37,42 @@ in
   home.stateVersion = "26.05";
   home.enableNixpkgsReleaseCheck = false;
 
-  _module.args.withgamemode = package: binary: pkgs.symlinkJoin {
-    pname = "${package.pname}-withgamemode";
-    version = package.version;
-    paths = [
-      package
-    ];
-    nativeBuildInputs = [
-      pkgs.makeBinaryWrapper
-    ];
-    postBuild = ''
-      wrapProgram "$out/bin/${binary}" \
-          --prefix LD_LIBRARY_PATH : '${pkgs.gamemode.lib}/lib'
-    '';
+  _module.args = {
+    withgamemode = pkg: bin: pkgs.symlinkJoin {
+      pname = "${pkg.pname}-withgamemode";
+      version = pkg.version;
+      paths = [
+        pkg
+      ];
+      nativeBuildInputs = [
+        pkgs.makeBinaryWrapper
+      ];
+      postBuild = ''
+        wrapProgram "$out/bin/${bin}" \
+            --prefix LD_LIBRARY_PATH : '${pkgs.gamemode.lib}/lib'
+      '';
+    };
+    firejailed = pkg: bin: pkgs.symlinkJoin {
+      pname = "${pkg.pname}-firejailed";
+      version = pkg.version;
+      paths = [
+        pkg
+      ];
+      nativeBuildInputs = [
+        pkgs.makeWrapper
+      ];
+      postBuild = ''
+        wrapProgram "$out/bin/${bin}" \
+
+        substituteInPlace "$out/bin/${bin}" \
+            --replace-fail 'exec -a "$0"' '${builtins.concatStringsSep " " [
+              "exec"
+              "firejail"
+              "--profile=default"
+              ''--whitelist="${config.xdg.stateHome}/nix/profile"''
+              ''--whitelist="${config.xdg.configHome}/gtk-3.0"''
+            ]}'
+      '';
+    };
   };
 }
