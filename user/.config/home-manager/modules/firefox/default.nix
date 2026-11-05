@@ -90,7 +90,7 @@ in
         };
       };
       ClearOnShutdown = {
-        BrowsingHistoryAndDownloads = true;
+        BrowsingHistoryAndDownloads = false;
         Cache = true;
         CookiesAndStorage = true;
         FormData = true;
