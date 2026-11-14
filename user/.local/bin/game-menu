@@ -34,7 +34,12 @@ if [ "$(file -b --mime-type "$path")" != application/vnd.microsoft.portable-exec
     exit 1
 fi
 
-cd "$(dirname "$path")"
+target=$(readlink "$conf_dir/games/$choice")
+if [ "${target#/}" != "$target" ]; then
+    target_dir=$(realpath "$(dirname "$target")")
+else
+    target_dir=$(realpath "$(dirname "$conf_dir/games/$target")")
+fi
 
 filename=$(printf '%s' "$choice" | iconv -t ASCII//TRANSLIT | sed 's/ /_/g ; s/[^a-zA-Z0-9_.-]//g')
 env_file="$conf_dir/envvars/$filename"
@@ -50,7 +55,7 @@ fi
 net=$(ip route get 9.9.9.9 | awk '{ for(i=1;i<=NF;i++) if($i=="dev") {print $(i+1); exit} }')
 dns=$(resolvectl status "$net" | awk -F ': ' '$1 == "Current DNS Server" { print $2; exit }')
 tz=$(timedatectl --property=Timezone show | awk -F '=' '{ print $2 }')
-if [ "${path#/media}" != "$path" ]; then
+if [ "${path#/media/}" != "$path" ]; then
     enable_media='--noblacklist=/media'
 else
     enable_media=
@@ -62,7 +67,7 @@ dxvk_conf="$home/config/dxvk/dxvk.conf"
 exec systemd-run --user \
     --unit="$filename" \
     --service-type=exec \
-    --same-dir \
+    --working-directory="$target_dir" \
     --collect \
     --setenv=MANGOHUD=1 \
     --setenv=PROTONPATH=GE-Proton \
@@ -101,11 +106,11 @@ exec systemd-run --user \
     --private-etc='@tls-ca,zoneinfo' \
     --private-tmp \
     --seccomp='!pivot_root,!mount,!umount2,!process_vm_readv,!userfaultfd,!mount_setattr' \
-    --whitelist="$(realpath "$dxvk_conf")" \
-    --whitelist="$(realpath "$home/config/MangoHud/MangoHud.conf")" \
-    --whitelist="$(realpath "$home/config/MangoHud/presets.conf")" \
-    --whitelist="$(realpath .)" \
     --whitelist="$XDG_STATE_HOME/nix/profile" \
+    --whitelist="$dxvk_conf" \
     --whitelist="$home" \
+    --whitelist="$home/config/MangoHud/MangoHud.conf" \
+    --whitelist="$home/config/MangoHud/presets.conf" \
     --whitelist="$prefix" \
+    --whitelist="$target_dir" \
     umu-run "$path" "$@"
