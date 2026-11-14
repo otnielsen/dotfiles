@@ -7,7 +7,9 @@
       profile = "high-quality";
       video-sync = "display-resample";
       interpolation = true;
+      target-colorspace-hint = false;
       hdr-reference-white = 100;
+      image-subs-hdr-peak = "sdr";
       fullscreen = true;
       osc = false;
       audio-display = false;
