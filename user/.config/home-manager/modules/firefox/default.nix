@@ -2,6 +2,7 @@
 
 let
   importedLists = [
+    "https://plainraw.com/raw/tdlblock"
     "https://raw.githubusercontent.com/fmhy/FMHYFilterlist/main/filterlist.txt"
     "https://raw.githubusercontent.com/mchangrh/yt-neuter/main/filters/sponsorblock.txt"
   ];
@@ -78,7 +79,6 @@ in
           userFilters = ''
             *$removeparam=utm_source
             ||store.steampowered.com^$removeparam=snr
-            ||*.cfd^
             ||youtube.com/watch^$removeparam=pp
             youtube.com##.annotation
             ! YouTube ambient mode
