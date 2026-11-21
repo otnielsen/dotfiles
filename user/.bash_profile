@@ -34,7 +34,7 @@ export INPUTRC=$XDG_CONFIG_HOME/readline/inputrc
 
 # Make uinput virtual xbox 360 controller use dualshock 3 mappings in sdl
 # applications, so square and triangle (x and y) aren't swapped
-export SDL_GAMECONTROLLERCONFIG='0300c5085e0400008e02000011810000,Xbox 360 Controller,a:b0,b:b1,back:b8,dpdown:b14,dpleft:b15,dpright:b16,dpup:b13,guide:b10,leftshoulder:b4,leftstick:b11,lefttrigger:a2,leftx:a0,lefty:a1,rightshoulder:b5,rightstick:b12,righttrigger:a5,rightx:a3,righty:a4,start:b9,x:b3,y:b2,platform:Linux,'
+export SDL_GAMECONTROLLERCONFIG='0000c5085e0400008e02000000000000,Xbox 360 Controller,a:b0,b:b1,x:b3,y:b2,back:b8,guide:b10,start:b9,leftstick:b11,rightstick:b12,leftshoulder:b4,rightshoulder:b5,dpup:b13,dpdown:b14,dpleft:b15,dpright:b16,leftx:a0,lefty:a1,rightx:a2,righty:a3,lefttrigger:b6,righttrigger:b7,platform:Linux,'
 
 # shellcheck source=/dev/null
 [ -f ~/.bashrc ] && source ~/.bashrc

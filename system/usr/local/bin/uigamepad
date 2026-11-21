@@ -1,64 +1,119 @@
 #!/usr/bin/env python3
 
 
+import errno
+import re
 import sys
 from pathlib import Path
 
 import libevdev
-from libevdev import EV_ABS, InputEvent
+import pyudev
+
+EVENT_RE = re.compile(r'event\d+')
+INPUT_RE = re.compile(r'input\d+')
 
 
-def main(args) -> str | None:
-    devnode = args[1]
-    if not Path(devnode).is_char_device():
-        return f'{devnode}: not a character device'
+def build_device():
+    device = libevdev.Device()
 
-    presets = {
-        'xbox360': {
-            'name': 'Virtual 360 pad',
-            'id': {
-                'vendor': 0x045E,
-                'product': 0x028E,
-            },
-        },
+    device.name = 'Virtual 360 pad'
+    device.id = {
+        'vendor': 0x045E,
+        'product': 0x028E,
     }
 
-    mappings = {
-        'Sony PLAYSTATION(R)3 Controller': 'xbox360',
-    }
+    device.enable(libevdev.EV_KEY.BTN_SOUTH)
+    device.enable(libevdev.EV_KEY.BTN_EAST)
+    device.enable(libevdev.EV_KEY.BTN_NORTH)
+    device.enable(libevdev.EV_KEY.BTN_WEST)
+    device.enable(libevdev.EV_KEY.BTN_TL)
+    device.enable(libevdev.EV_KEY.BTN_TR)
+    device.enable(libevdev.EV_KEY.BTN_TL2)
+    device.enable(libevdev.EV_KEY.BTN_TR2)
+    device.enable(libevdev.EV_KEY.BTN_SELECT)
+    device.enable(libevdev.EV_KEY.BTN_START)
+    device.enable(libevdev.EV_KEY.BTN_MODE)
+    device.enable(libevdev.EV_KEY.BTN_THUMBL)
+    device.enable(libevdev.EV_KEY.BTN_THUMBR)
+    device.enable(libevdev.EV_KEY.BTN_DPAD_UP)
+    device.enable(libevdev.EV_KEY.BTN_DPAD_DOWN)
+    device.enable(libevdev.EV_KEY.BTN_DPAD_LEFT)
+    device.enable(libevdev.EV_KEY.BTN_DPAD_RIGHT)
 
-    with open(devnode, 'rb') as fd:
-        dev = libevdev.Device(fd)
-        dev.grab()
+    abs = libevdev.InputAbsInfo(0, 255)
+    device.enable(libevdev.EV_ABS.ABS_X, abs)
+    device.enable(libevdev.EV_ABS.ABS_Y, abs)
+    device.enable(libevdev.EV_ABS.ABS_RX, abs)
+    device.enable(libevdev.EV_ABS.ABS_RY, abs)
 
-        dev.disable(libevdev.EV_FF)
+    return device.create_uinput_device()
 
-        if dev.name in mappings:
-            preset = presets[mappings[dev.name]]
-            dev.name = preset['name']
-            dev.id = preset['id']
 
-        uinput = dev.create_uinput_device()
-        send_events = uinput.send_events
+def device_matches(device) -> bool:
+    if not (device.action != 'remove' and EVENT_RE.fullmatch(device.sys_name)):
+        return False
 
-        ABS_Z = EV_ABS.ABS_Z
-        ABS_RZ = EV_ABS.ABS_RZ
-        abs_z_max = InputEvent(ABS_Z, dev.absinfo[ABS_Z].maximum)
-        abs_rz_max = InputEvent(ABS_RZ, dev.absinfo[ABS_RZ].maximum)
+    for ancestor in device.ancestors:
+        if not (
+            ancestor.subsystem == 'input'
+            and INPUT_RE.fullmatch(ancestor.sys_name)
+        ):
+            continue
 
-        while True:
-            for event in dev.events():
-                if event.type == EV_ABS:
-                    code = event.code
-                    if code == ABS_Z:
-                        if event.value != 0:
-                            event = abs_z_max
-                    elif code == ABS_RZ:
-                        if event.value != 0:
-                            event = abs_rz_max
+        ATTRS = ancestor.attributes
 
-                send_events([event])
+        try:
+            if (
+                ATTRS.asstring('id/product') == '0268'
+                and ATTRS.asstring('id/vendor') == '054c'
+                and ATTRS.asstring('name') == 'Sony PLAYSTATION(R)3 Controller'
+            ):
+                return True
+        except KeyError:
+            continue
+
+    return False
+
+
+def main() -> str | None:
+    context = pyudev.Context()
+    monitor = pyudev.Monitor.from_netlink(context)
+    monitor.filter_by('input')
+
+    devnode = None
+    for device in context.list_devices(subsystem='input'):
+        if device_matches(device):
+            devnode = device.device_node
+            break
+
+    uinput = build_device()
+
+    while True:
+        if devnode is None:
+            for device in iter(monitor.poll, None):
+                if device_matches(device):
+                    devnode = device.device_node
+                    break
+
+            if devnode is None:
+                return
+
+        if not Path(devnode).is_char_device():
+            return f'{devnode}: not a character device'
+
+        with open(devnode, 'rb') as fd:
+            device = libevdev.Device(fd)
+            device.grab()
+
+            try:
+                for event in device.events():
+                    uinput.send_events([event])
+            except OSError as e:
+                if e.errno != errno.ENODEV:
+                    raise
+            finally:
+                devnode = None
 
 
 if __name__ == '__main__':
-    sys.exit(main(sys.argv))
+    sys.exit(main())

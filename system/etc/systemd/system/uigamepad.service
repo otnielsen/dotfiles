@@ -1,0 +1,10 @@
+[Unit]
+Description=Virtual gamepad via uinput
+
+[Service]
+Type=exec
+ExecStart=/usr/local/bin/uigamepad
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
