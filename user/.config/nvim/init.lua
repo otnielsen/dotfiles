@@ -299,9 +299,9 @@ vim.lsp.config('biome', {
         formatter = {
           indentStyle = 'space',
         },
-        html = {
+        markdown = {
           formatter = {
-            enabled = true,
+            proseWrap = 'always',
           },
         },
       },
