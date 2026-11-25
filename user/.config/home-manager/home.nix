@@ -69,6 +69,9 @@ in
               "exec"
               "firejail"
               "--profile=default"
+              "--disable-mnt"
+              ''--mkdir="${HOME}/Downloads/${pkg.pname}"''
+              ''--whitelist="${HOME}/Downloads/${pkg.pname}"''
               ''--whitelist="${config.xdg.stateHome}/nix/profile"''
               ''--whitelist="${config.xdg.configHome}/gtk-3.0"''
             ]}'
