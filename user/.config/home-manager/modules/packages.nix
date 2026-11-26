@@ -16,7 +16,6 @@
     typst
     umu-launcher
     vulkan-tools
-    yt-dlp
 
     (firejailed librewolf-bin "librewolf")
   ];

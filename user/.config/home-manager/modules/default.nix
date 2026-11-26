@@ -6,5 +6,6 @@
     ./lazygit.nix
     ./mpv.nix
     ./packages.nix
+    ./yt-dlp.nix
   ];
 }

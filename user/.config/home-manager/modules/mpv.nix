@@ -19,9 +19,8 @@
         "en"
       ];
       ytdl-raw-options = builtins.concatStringsSep "," [
-        ''format-sort="+hdr"''
+        ''format-sort="vcodec:vp9.2,width:2560,height:1440"''
       ];
-      ytdl-format = "bv*[width<=2560][height<=1440]+ba/b[width<=2560][height<=1440]";
     };
     scripts = with pkgs.mpvScripts; [ sponsorblock-minimal ];
     scriptOpts = {
