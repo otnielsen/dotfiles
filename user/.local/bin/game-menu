@@ -4,7 +4,7 @@ set -eu
 
 menu='fuzzel --dmenu --only-match'
 conf_dir=~/.config/game-menu
-menu_options=$(find "$conf_dir/games" -maxdepth 1 -type l -xtype f -printf '%f\n')
+menu_options=$(find "$conf_dir/games" -maxdepth 1 -type l -xtype f -printf '%f\n' | sort)
 
 icon_dir="$conf_dir/icons"
 cd "$icon_dir"
