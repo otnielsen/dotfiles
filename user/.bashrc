@@ -65,6 +65,7 @@ alias glow='glow -p'
 
 alias lg='lazygit'
 alias dl='curl -fL --remote-name-all' # dl for download
+alias rsync='rsync -ahh --info=progress2'
 
 lfcd() {
     local file
